@@ -1,1 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revise AI — Smart Exam Revision, Powered by AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0b0f1a;
+      color: #e2e8f0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated gradient background ── */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(99, 102, 241, .15) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(168, 85, 247, .12) 0%, transparent 70%);
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      backdrop-filter: blur(16px);
+      background: rgba(11, 15, 26, .7);
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: .95rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+
+    nav a:hover { color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+      padding: 8rem 2rem 4rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem 1.1rem;
+      background: rgba(99, 102, 241, .12);
+      border: 1px solid rgba(99, 102, 241, .25);
+      border-radius: 999px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: #818cf8;
+      margin-bottom: 2rem;
+      animation: fadeDown .8s ease both;
+    }
+
+    .badge .dot {
+      width: 8px;
+      height: 8px;
+      background: #818cf8;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
+      max-width: 800px;
+      animation: fadeDown .8s .1s ease both;
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+      color: #94a3b8;
+      max-width: 580px;
+      animation: fadeDown .8s .2s ease both;
+    }
+
+    .hero-actions {
+      margin-top: 2.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeDown .8s .3s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .85rem 2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .25s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(99, 102, 241, .35);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 8px 32px rgba(99, 102, 241, .5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, .06);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, .1);
+    }
+
+    /* ── Features ── */
+    .features {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .5rem;
+    }
+
+    .features .sub {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: transform .2s, border-color .3s, box-shadow .3s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99, 102, 241, .3);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, .08);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, .2), rgba(168, 85, 247, .2));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: .5rem;
+    }
+
+    .card p {
+      color: #94a3b8;
+      font-size: .95rem;
+    }
+
+    /* ── CTA / Waitlist ── */
+    .cta {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 2rem 6rem;
+    }
+
+    .cta-box {
+      max-width: 620px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 24px;
+      padding: 3.5rem 2.5rem;
+    }
+
+    .cta-box h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .75rem;
+    }
+
+    .cta-box p {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .email-form {
+      display: flex;
+      gap: .75rem;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .email-form input {
+      flex: 1;
+      padding: .8rem 1.2rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .email-form input::placeholder { color: #64748b; }
+    .email-form input:focus { border-color: #6366f1; }
+
+    .email-form .btn { white-space: nowrap; }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      color: #475569;
+      font-size: .85rem;
+    }
+
+    footer a { color: #6366f1; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: .4; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { display: none; }
+      .email-form { flex-direction: column; }
+      .cta-box { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient glow -->
+  <div class="bg-glow"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="#" class="logo">
+      <span class="logo-icon">📖</span>
+      Revise AI
+    </a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#waitlist">Get Early Access</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge">
+      <span class="dot"></span>
+      Coming Soon
+    </div>
+    <h1>
+      Ace Your Exams with<br />
+      <span class="gradient-text">AI‑Powered Revision</span>
+    </h1>
+    <p>
+      Revise AI turns your syllabus into smart, personalised revision sessions.
+      Focus on what matters, retain more, and walk into every exam confident and prepared.
+    </p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn btn-primary">Join the Waitlist →</a>
+      <a href="#features" class="btn btn-secondary">See How It Works</a>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <h2>Why Students Love Revise AI</h2>
+    <p class="sub">Built for real exam prep — not just flashcards</p>
+
+    <div class="features-grid">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Topic‑Wise Revision</h3>
+        <p>Upload your syllabus or pick a subject and get structured, topic‑by‑topic revision plans tailored to your exam schedule.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>Adaptive Learning</h3>
+        <p>Our AI identifies your weak spots and automatically adjusts the revision flow so you spend time where it counts the most.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Quick Recaps &amp; Summaries</h3>
+        <p>Get concise, exam‑focused summaries for any topic — perfect for last‑minute revision before the big day.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📝</div>
+        <h3>Practice Questions</h3>
+        <p>AI‑generated questions modelled on past papers help you test your understanding and build exam confidence.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Progress Tracking</h3>
+        <p>Visual dashboards show how much you've covered, what needs attention, and how ready you are — at a glance.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <h3>Privacy First</h3>
+        <p>Your study data stays yours. Enterprise‑grade encryption and strict privacy controls keep your information safe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / Waitlist -->
+  <section class="cta" id="waitlist">
+    <div class="cta-box">
+      <h2>Be the First to Know</h2>
+      <p>We're launching soon. Drop your email and we'll notify you the moment Revise AI is ready.</p>
+      <form class="email-form" onsubmit="handleSubmit(event)">
+        <input type="email" placeholder="you@example.com" required />
+        <button type="submit" class="btn btn-primary">Notify Me</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Revise AI — A product of <a href="https://www.vidvatailabs.com/" target="_blank">VidvatAI Labs</a>. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const email = input.value;
+      alert('Thanks! We\'ll notify ' + email + ' when Revise AI launches.');
+      input.value = '';
+    }
+  </script>
+
+</body>
+</html>
