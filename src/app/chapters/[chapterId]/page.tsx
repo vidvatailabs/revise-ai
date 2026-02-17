@@ -5,15 +5,19 @@ import { prisma } from "@/lib/prisma";
 import { AppHeader } from "@/components/app-header";
 import { TopicCards } from "@/components/topic-cards";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Trophy } from "lucide-react";
+import { ArrowLeft, Trophy, BookmarkPlus } from "lucide-react";
 
 export default async function ChapterPage({
   params,
+  searchParams,
 }: {
   params: { chapterId: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
+
+  const isReviseMode = searchParams?.mode === "revise";
 
   const chapter = await prisma.chapter.findUnique({
     where: { id: params.chapterId },
@@ -42,13 +46,26 @@ export default async function ChapterPage({
   const hasQuiz = chapter._count.mcqs > 0;
 
   // Prepare topics with their status for the client component
-  const topicsWithStatus = chapter.topics.map((topic) => ({
+  const allTopics = chapter.topics.map((topic) => ({
     id: topic.id,
     title: topic.title,
     summary: topic.summary,
     order: topic.order,
     status: topic.statuses[0]?.status ?? null,
   }));
+
+  // In revise mode, only show topics marked as "revise_later"
+  const topicsToShow = isReviseMode
+    ? allTopics.filter((t) => t.status === "revise_later")
+    : allTopics;
+
+  // If revise mode but no topics to revise, redirect to full chapter
+  if (isReviseMode && topicsToShow.length === 0) {
+    redirect(`/chapters/${params.chapterId}`);
+  }
+
+  const backHref = isReviseMode ? "/revise-later" : `/subjects/${chapter.subjectId}`;
+  const backLabel = isReviseMode ? "Back to Revise Later" : `Back to ${chapter.subject.title}`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,11 +74,11 @@ export default async function ChapterPage({
       <main className="relative z-0 max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Back Link */}
         <Link
-          href={`/subjects/${chapter.subjectId}`}
+          href={backHref}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to {chapter.subject.title}
+          {backLabel}
         </Link>
 
         {/* Chapter Header */}
@@ -73,31 +90,39 @@ export default async function ChapterPage({
             <Badge variant="outline" className="text-xs">
               Class {chapter.subject.class}
             </Badge>
+            {isReviseMode && (
+              <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-xs">
+                <BookmarkPlus className="h-3 w-3 mr-1" />
+                Revision Mode
+              </Badge>
+            )}
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             {chapter.title}
           </h1>
           <p className="text-muted-foreground">
-            {chapter.topics.length} topics • {chapter._count.mcqs} quiz
-            questions
+            {isReviseMode
+              ? `${topicsToShow.length} topics to revise`
+              : `${chapter.topics.length} topics · ${chapter._count.mcqs} quiz questions`}
           </p>
         </div>
 
         {/* Swipeable Topic Cards */}
-        {chapter.topics.length > 0 && (
+        {topicsToShow.length > 0 && (
           <div className="mb-10">
             <TopicCards
-              topics={topicsWithStatus}
+              topics={topicsToShow}
               chapterId={chapter.id}
               chapterTitle={chapter.title}
-              hasQuiz={hasQuiz}
+              hasQuiz={!isReviseMode && hasQuiz}
               mcqCount={chapter._count.mcqs}
+              reviseMode={isReviseMode}
             />
           </div>
         )}
 
-        {/* Previous Attempts */}
-        {chapter.quizAttempts.length > 0 && (
+        {/* Previous Attempts - hide in revise mode */}
+        {!isReviseMode && chapter.quizAttempts.length > 0 && (
           <div>
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Trophy className="h-5 w-5 text-indigo-400" />

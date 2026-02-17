@@ -12,38 +12,28 @@ import {
   Share2,
   Loader2,
   Sparkles,
-  PlayCircle,
   RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
 
-type TopicWithStatus = {
+type TopicWithMeta = {
   id: string;
   title: string;
   summary: string;
   order: number;
-  status?: string | null; // "got_it" | "revise_later" | null
+  status: string | null;
+  chapterTitle: string;
+  subjectTitle: string;
+  subjectIcon: string;
 };
 
-interface TopicCardsProps {
-  topics: TopicWithStatus[];
-  chapterId: string;
-  chapterTitle: string;
-  hasQuiz: boolean;
-  mcqCount: number;
-  reviseMode?: boolean;
+interface ReviseAllCardsProps {
+  topics: TopicWithMeta[];
 }
 
 type SwipeDirection = "left" | "right" | null;
 
-export function TopicCards({
-  topics,
-  chapterId,
-  chapterTitle,
-  hasQuiz,
-  mcqCount,
-  reviseMode = false,
-}: TopicCardsProps) {
+export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [statuses, setStatuses] = useState<Record<string, string | null>>(
     () => {
@@ -87,12 +77,9 @@ export function TopicCards({
     (direction: "left" | "right", nextIndex: number | "summary") => {
       if (animating) return;
       setAnimating(true);
-
-      // Exit current card
       setExitDirection(direction);
 
       setTimeout(() => {
-        // After exit, update index and enter new card
         if (nextIndex === "summary") {
           setShowSummary(true);
         } else {
@@ -101,7 +88,6 @@ export function TopicCards({
         setExitDirection(null);
         setEnterDirection(direction === "left" ? "right" : "left");
 
-        // Clear enter animation
         setTimeout(() => {
           setEnterDirection(null);
           setAnimating(false);
@@ -125,7 +111,6 @@ export function TopicCards({
     animateTransition("right", currentIndex - 1);
   }, [currentIndex, animating, animateTransition]);
 
-  // Touch/swipe handlers - only on the swipe area, not buttons
   const handleTouchStart = (e: React.TouchEvent) => {
     if (animating) return;
     touchStartX.current = e.touches[0].clientX;
@@ -137,21 +122,22 @@ export function TopicCards({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging.current || animating) return;
-
     const currentX = e.touches[0].clientX;
     const currentY = e.touches[0].clientY;
     const diffX = currentX - touchStartX.current;
     const diffY = currentY - touchStartY.current;
 
-    // Determine if this is a vertical scroll (first significant movement)
-    if (!isVerticalScroll.current && Math.abs(diffY) > 10 && Math.abs(diffY) > Math.abs(diffX)) {
+    if (
+      !isVerticalScroll.current &&
+      Math.abs(diffY) > 10 &&
+      Math.abs(diffY) > Math.abs(diffX)
+    ) {
       isVerticalScroll.current = true;
       isDragging.current = false;
       setDragOffset(0);
       return;
     }
 
-    // Only track horizontal drags
     if (!isVerticalScroll.current && Math.abs(diffX) > 5) {
       touchCurrentX.current = currentX;
       setDragOffset(diffX);
@@ -164,26 +150,18 @@ export function TopicCards({
       setDragOffset(0);
       return;
     }
-
     isDragging.current = false;
     const diff = touchStartX.current - touchCurrentX.current;
     const threshold = 60;
-
     if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
-        goNext();
-      } else {
-        goPrev();
-      }
+      if (diff > 0) goNext();
+      else goPrev();
     }
-
     setDragOffset(0);
   };
 
   const setTopicStatus = async (topicId: string, status: string) => {
     const currentStatus = statuses[topicId];
-
-    // If tapping the same status, remove it (toggle)
     if (currentStatus === status) {
       setLoadingAction(`${topicId}-${status}`);
       setStatuses((prev) => ({ ...prev, [topicId]: null }));
@@ -221,22 +199,20 @@ export function TopicCards({
       try {
         await navigator.share({
           title: currentTopic.title,
-          text: `Check out "${currentTopic.title}" from ${chapterTitle} on Revise AI!`,
+          text: `Check out "${currentTopic.title}" from ${currentTopic.chapterTitle} on Revise AI!`,
           url: window.location.href,
         });
       } catch {
-        // User cancelled share
+        // cancelled
       }
     } else {
       await navigator.clipboard.writeText(window.location.href);
     }
   };
 
-  // Compute card transform style
   const getCardStyle = (): React.CSSProperties => {
-    // During drag - follow finger with slight rotation
     if (dragOffset !== 0) {
-      const rotation = (dragOffset / 400) * 8; // Max ~8deg rotation
+      const rotation = (dragOffset / 400) * 8;
       const opacity = 1 - Math.abs(dragOffset) / 600;
       return {
         transform: `translateX(${dragOffset}px) rotate(${rotation}deg)`,
@@ -244,78 +220,77 @@ export function TopicCards({
         transition: "none",
       };
     }
-
-    // Exit animation
-    if (exitDirection === "left") {
+    if (exitDirection === "left")
       return {
         transform: "translateX(-120%) rotate(-12deg)",
         opacity: 0,
-        transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
+        transition:
+          "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
       };
-    }
-    if (exitDirection === "right") {
+    if (exitDirection === "right")
       return {
         transform: "translateX(120%) rotate(12deg)",
         opacity: 0,
-        transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
+        transition:
+          "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
       };
-    }
-
-    // Enter animation
-    if (enterDirection === "right") {
+    if (enterDirection === "right")
       return {
         transform: "translateX(0) rotate(0deg)",
         opacity: 1,
-        transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
-        animation: "cardEnterFromRight 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+        transition:
+          "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
+        animation:
+          "cardEnterFromRight 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
       };
-    }
-    if (enterDirection === "left") {
+    if (enterDirection === "left")
       return {
         transform: "translateX(0) rotate(0deg)",
         opacity: 1,
-        transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
-        animation: "cardEnterFromLeft 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+        transition:
+          "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
+        animation:
+          "cardEnterFromLeft 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
       };
-    }
-
     return {
       transform: "translateX(0) rotate(0deg)",
       opacity: 1,
-      transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
+      transition:
+        "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
     };
   };
 
-  // Summary view after all cards
+  // Summary
   if (showSummary) {
     return (
       <div className="space-y-6">
         <style jsx>{`
           @keyframes summaryPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+              transform: scale(0.8);
+              opacity: 0;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
           }
         `}</style>
         <div
-          className={`rounded-2xl border p-6 sm:p-8 text-center ${
-            reviseMode
-              ? "border-amber-500/20 bg-amber-500/5"
-              : "border-indigo-500/20 bg-indigo-500/5"
-          }`}
-          style={{ animation: "summaryPop 0.4s cubic-bezier(0.22, 1, 0.36, 1)" }}
+          className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 sm:p-8 text-center"
+          style={{
+            animation: "summaryPop 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
         >
-          <div className={`inline-flex h-14 w-14 items-center justify-center rounded-full mb-4 ${
-            reviseMode ? "bg-amber-500/10" : "bg-indigo-500/10"
-          }`}>
-            <Sparkles className={`h-7 w-7 ${reviseMode ? "text-amber-400" : "text-indigo-400"}`} />
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 mb-4">
+            <Sparkles className="h-7 w-7 text-amber-400" />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">
-            {reviseMode ? "Revision Complete!" : "Chapter Review Complete!"}
+            Revision Complete! 🎉
           </h2>
           <p className="text-muted-foreground mb-6">
-            {reviseMode
-              ? `You've revised all ${totalTopics} bookmarked ${totalTopics === 1 ? "topic" : "topics"}.`
-              : `You've gone through all ${totalTopics} topics in this chapter.`}
+            You&apos;ve revised all {totalTopics} bookmarked topics across
+            chapters.
           </p>
 
           <div className="grid grid-cols-3 gap-3 mb-6">
@@ -350,20 +325,11 @@ export function TopicCards({
             >
               <RotateCcw className="h-4 w-4" /> Review Again
             </Button>
-            {reviseMode && (
-              <Link href="/revise-later">
-                <Button variant="outline" className="gap-2">
-                  <ArrowLeft className="h-4 w-4" /> Back to Revise Later
-                </Button>
-              </Link>
-            )}
-            {hasQuiz && (
-              <Link href={`/quiz/${chapterId}`}>
-                <Button className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0">
-                  <PlayCircle className="h-4 w-4" /> Start Quiz ({mcqCount} Qs)
-                </Button>
-              </Link>
-            )}
+            <Link href="/revise-later">
+              <Button variant="outline" className="gap-2">
+                <ArrowLeft className="h-4 w-4" /> Back to Revise Later
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -374,7 +340,6 @@ export function TopicCards({
 
   return (
     <div className="space-y-4">
-      {/* Keyframe animations */}
       <style jsx>{`
         @keyframes cardEnterFromRight {
           0% {
@@ -402,7 +367,7 @@ export function TopicCards({
       <div className="flex items-center gap-3">
         <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
+            className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -411,8 +376,11 @@ export function TopicCards({
         </span>
       </div>
 
-      {/* Card with overflow hidden wrapper for exit animations */}
-      <div className="relative overflow-x-clip rounded-2xl" style={{ zIndex: 1 }}>
+      {/* Card */}
+      <div
+        className="relative overflow-x-clip rounded-2xl"
+        style={{ zIndex: 1 }}
+      >
         <div
           ref={swipeAreaRef}
           onTouchStart={handleTouchStart}
@@ -421,48 +389,50 @@ export function TopicCards({
           style={getCardStyle()}
           className="rounded-2xl border border-border bg-card overflow-hidden select-none will-change-transform"
         >
-          {/* Card header */}
-          <div className="flex items-center justify-between px-5 pt-5 pb-3">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 text-xs font-bold">
-                {currentIndex + 1}
-              </span>
-              <h3 className="font-semibold text-white text-lg leading-snug">
-                {currentTopic.title}
-              </h3>
+          {/* Card header with chapter/subject info */}
+          <div className="px-5 pt-5 pb-2">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+              <span>{currentTopic.subjectIcon}</span>
+              <span>{currentTopic.subjectTitle}</span>
+              <span className="text-border">·</span>
+              <span className="truncate">{currentTopic.chapterTitle}</span>
             </div>
-            <button
-              onClick={handleShare}
-              className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors flex-shrink-0"
-              title="Share"
-            >
-              <Share2 className="h-4 w-4" />
-            </button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 text-xs font-bold">
+                  {currentIndex + 1}
+                </span>
+                <h3 className="font-semibold text-white text-lg leading-snug">
+                  {currentTopic.title}
+                </h3>
+              </div>
+              <button
+                onClick={handleShare}
+                className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors flex-shrink-0"
+                title="Share"
+              >
+                <Share2 className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Status badge */}
-          {topicStatus && (
+          {topicStatus && topicStatus !== "revise_later" && (
             <div className="px-5 pb-2">
-              <Badge
-                className={
-                  topicStatus === "got_it"
-                    ? "bg-green-500/10 text-green-400 border-green-500/20"
-                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                }
-              >
-                {topicStatus === "got_it" ? "Got It" : "Revise Later"}
+              <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
+                Got It
               </Badge>
             </div>
           )}
 
-          {/* Card content - scrollable */}
+          {/* Card content */}
           <div className="px-5 pb-5 max-h-[50vh] overflow-y-auto">
             <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
               {currentTopic.summary}
             </div>
           </div>
 
-          {/* Action buttons - stop propagation to prevent swipe interference */}
+          {/* Action buttons */}
           <div
             className="border-t border-border px-5 py-4 flex items-center justify-center gap-3"
             onTouchStart={(e) => e.stopPropagation()}
@@ -522,7 +492,6 @@ export function TopicCards({
           Previous
         </Button>
 
-        {/* Dot indicators */}
         <div className="flex gap-1.5 max-w-[200px] overflow-hidden justify-center">
           {topics.map((t, i) => (
             <button
@@ -536,11 +505,9 @@ export function TopicCards({
               }}
               className={`h-2 rounded-full transition-all ${
                 i === currentIndex
-                  ? "w-6 bg-indigo-500"
+                  ? "w-6 bg-amber-500"
                   : statuses[t.id] === "got_it"
                   ? "w-2 bg-green-500/50"
-                  : statuses[t.id] === "revise_later"
-                  ? "w-2 bg-amber-500/50"
                   : "w-2 bg-secondary"
               }`}
             />
@@ -559,7 +526,7 @@ export function TopicCards({
         </Button>
       </div>
 
-      {/* Swipe hint - only show on first card */}
+      {/* Swipe hint */}
       {currentIndex === 0 && (
         <p className="text-center text-xs text-muted-foreground/60">
           Swipe left or right to navigate cards

@@ -9,6 +9,7 @@ import {
   BookmarkPlus,
   ChevronRight,
   BookOpen,
+  PlayCircle,
 } from "lucide-react";
 
 export default async function ReviseLaterPage() {
@@ -87,6 +88,10 @@ export default async function ReviseLaterPage() {
   }
 
   const totalTopics = reviseLaterTopics.length;
+  const totalChapters = Array.from(grouped.values()).reduce(
+    (sum, g) => sum + g.chapters.size,
+    0
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -134,6 +139,31 @@ export default async function ReviseLaterPage() {
           </div>
         ) : (
           <div className="space-y-8">
+            {/* Revise All Card */}
+            <Link
+              href="/revise-later/practice"
+              className="group block rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-5 sm:p-6 transition-all hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/20 group-hover:bg-amber-500/30 transition-colors">
+                    <PlayCircle className="h-6 w-6 text-amber-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-lg group-hover:text-amber-300 transition-colors">
+                      Revise All Topics
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {totalTopics} topics across {totalChapters}{" "}
+                      {totalChapters === 1 ? "chapter" : "chapters"}
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-amber-400/50 group-hover:text-amber-400 transition-colors flex-shrink-0" />
+              </div>
+            </Link>
+
+            {/* Per-chapter breakdown */}
             {Array.from(grouped.values()).map(({ subject, chapters }) => (
               <div key={subject.id}>
                 {/* Subject header */}
@@ -148,7 +178,7 @@ export default async function ReviseLaterPage() {
                   {Array.from(chapters.values()).map(({ chapter, topics }) => (
                     <Link
                       key={chapter.id}
-                      href={`/chapters/${chapter.id}`}
+                      href={`/chapters/${chapter.id}?mode=revise`}
                       className="group block rounded-xl border border-border bg-card p-4 sm:p-5 transition-all hover:border-amber-500/30 hover:shadow-lg hover:shadow-amber-500/5"
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -157,7 +187,8 @@ export default async function ReviseLaterPage() {
                             {chapter.title}
                           </h3>
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {topics.length} {topics.length === 1 ? "topic" : "topics"} to revise
+                            {topics.length}{" "}
+                            {topics.length === 1 ? "topic" : "topics"} to revise
                           </p>
                         </div>
                         <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-amber-400 transition-colors flex-shrink-0" />
