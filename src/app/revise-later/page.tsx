@@ -4,7 +4,6 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateUser } from "@/lib/user";
 import { AppHeader } from "@/components/app-header";
-import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
   BookmarkPlus,
@@ -153,23 +152,24 @@ export default async function ReviseLaterPage() {
                       className="group block rounded-xl border border-border bg-card p-4 sm:p-5 transition-all hover:border-amber-500/30 hover:shadow-lg hover:shadow-amber-500/5"
                     >
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-white group-hover:text-amber-300 transition-colors">
-                          {chapter.title}
-                        </h3>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-white group-hover:text-amber-300 transition-colors truncate">
+                            {chapter.title}
+                          </h3>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {topics.length} {topics.length === 1 ? "topic" : "topics"} to revise
+                          </p>
+                        </div>
                         <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-amber-400 transition-colors flex-shrink-0" />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         {topics.map((topic) => (
                           <div
                             key={topic.id}
-                            className="flex items-start gap-2 text-sm"
+                            className="flex items-center gap-2 text-sm text-muted-foreground"
                           >
-                            <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 text-xs mt-0.5 flex-shrink-0">
-                              Revise
-                            </Badge>
-                            <span className="text-muted-foreground">
-                              {topic.title}
-                            </span>
+                            <span className="h-1.5 w-1.5 rounded-full bg-amber-400/60 flex-shrink-0" />
+                            {topic.title}
                           </div>
                         ))}
                       </div>
