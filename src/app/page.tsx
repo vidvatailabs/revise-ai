@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import {
   BookOpen,
   Target,
@@ -52,7 +53,10 @@ const features = [
   },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth();
+  if (userId) redirect("/dashboard");
+
   return (
     <div className="min-h-screen bg-background">
       {/* Ambient glow */}
@@ -73,25 +77,16 @@ export default function LandingPage() {
           >
             Features
           </Link>
-          <SignedOut>
-            <Link href="/sign-in">
-              <Button variant="ghost" size="sm">
-                Login
-              </Button>
-            </Link>
-            <Link href="/sign-up">
-              <Button size="sm" className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0">
-                Get Started
-              </Button>
-            </Link>
-          </SignedOut>
-          <SignedIn>
-            <Link href="/dashboard">
-              <Button size="sm" className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0">
-                Dashboard <ArrowRight className="ml-1 h-4 w-4" />
-              </Button>
-            </Link>
-          </SignedIn>
+          <Link href="/sign-in">
+            <Button variant="ghost" size="sm">
+              Login
+            </Button>
+          </Link>
+          <Link href="/sign-up">
+            <Button size="sm" className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0">
+              Get Started
+            </Button>
+          </Link>
         </div>
       </nav>
 
@@ -114,26 +109,14 @@ export default function LandingPage() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4 justify-center animate-fade-down [animation-delay:300ms]">
-          <SignedOut>
-            <Link href="/sign-up">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0 shadow-lg shadow-indigo-500/25 text-base px-8 h-12"
-              >
-                Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </SignedOut>
-          <SignedIn>
-            <Link href="/dashboard">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0 shadow-lg shadow-indigo-500/25 text-base px-8 h-12"
-              >
-                Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </SignedIn>
+          <Link href="/sign-up">
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0 shadow-lg shadow-indigo-500/25 text-base px-8 h-12"
+            >
+              Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
           <Link href="#features">
             <Button
               size="lg"
