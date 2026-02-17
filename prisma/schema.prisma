@@ -9,12 +9,13 @@ datasource db {
 }
 
 model User {
-  id            String        @id // Clerk user ID
-  email         String        @unique
+  id            String         @id // Clerk user ID
+  email         String         @unique
   selectedClass Int?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   quizAttempts  QuizAttempt[]
+  topicStatuses TopicStatus[]
 }
 
 model Subject {
@@ -42,12 +43,13 @@ model Chapter {
 }
 
 model Topic {
-  id        String  @id @default(cuid())
+  id        String        @id @default(cuid())
   chapterId String
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter   Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   title     String
-  summary   String  @db.Text
-  order     Int     @default(0)
+  summary   String        @db.Text
+  order     Int           @default(0)
+  statuses  TopicStatus[]
 
   @@index([chapterId])
 }
@@ -65,6 +67,21 @@ model MCQ {
   explanation   String  @db.Text
 
   @@index([chapterId])
+}
+
+model TopicStatus {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId   String
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  status    String   // "got_it" or "revise_later"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, topicId])
+  @@index([userId])
+  @@index([topicId])
 }
 
 model QuizAttempt {

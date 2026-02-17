@@ -3,15 +3,9 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AppHeader } from "@/components/app-header";
-import { Button } from "@/components/ui/button";
+import { TopicCards } from "@/components/topic-cards";
 import { Badge } from "@/components/ui/badge";
-import {
-  ArrowLeft,
-  BookOpen,
-  PlayCircle,
-  Trophy,
-  RotateCcw,
-} from "lucide-react";
+import { ArrowLeft, Trophy } from "lucide-react";
 
 export default async function ChapterPage({
   params,
@@ -25,7 +19,15 @@ export default async function ChapterPage({
     where: { id: params.chapterId },
     include: {
       subject: true,
-      topics: { orderBy: { order: "asc" } },
+      topics: {
+        orderBy: { order: "asc" },
+        include: {
+          statuses: {
+            where: { userId },
+            select: { status: true },
+          },
+        },
+      },
       _count: { select: { mcqs: true } },
       quizAttempts: {
         where: { userId },
@@ -38,7 +40,15 @@ export default async function ChapterPage({
   if (!chapter) notFound();
 
   const hasQuiz = chapter._count.mcqs > 0;
-  const latestAttempt = chapter.quizAttempts[0];
+
+  // Prepare topics with their status for the client component
+  const topicsWithStatus = chapter.topics.map((topic) => ({
+    id: topic.id,
+    title: topic.title,
+    summary: topic.summary,
+    order: topic.order,
+    status: topic.statuses[0]?.status ?? null,
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -55,7 +65,7 @@ export default async function ChapterPage({
         </Link>
 
         {/* Chapter Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="outline" className="text-xs">
               {chapter.subject.title}
@@ -73,60 +83,18 @@ export default async function ChapterPage({
           </p>
         </div>
 
-        {/* Quiz CTA */}
-        {hasQuiz && (
-          <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-5 mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h3 className="font-semibold text-white text-lg mb-1">
-                  {latestAttempt ? "Retake the Quiz" : "Ready to Test Yourself?"}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {latestAttempt
-                    ? `Last score: ${latestAttempt.score}/${latestAttempt.total} - Try to beat it!`
-                    : `${chapter._count.mcqs} questions to test your understanding`}
-                </p>
-              </div>
-              <Link href={`/quiz/${chapter.id}`}>
-                <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0 shadow-lg shadow-indigo-500/20 gap-2">
-                  {latestAttempt ? (
-                    <>
-                      <RotateCcw className="h-4 w-4" /> Retake Quiz
-                    </>
-                  ) : (
-                    <>
-                      <PlayCircle className="h-4 w-4" /> Start Quiz
-                    </>
-                  )}
-                </Button>
-              </Link>
-            </div>
+        {/* Swipeable Topic Cards */}
+        {chapter.topics.length > 0 && (
+          <div className="mb-10">
+            <TopicCards
+              topics={topicsWithStatus}
+              chapterId={chapter.id}
+              chapterTitle={chapter.title}
+              hasQuiz={hasQuiz}
+              mcqCount={chapter._count.mcqs}
+            />
           </div>
         )}
-
-        {/* Topics */}
-        <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-          <BookOpen className="h-5 w-5 text-indigo-400" />
-          Topics & Summaries
-        </h2>
-        <div className="space-y-4 mb-10">
-          {chapter.topics.map((topic, index) => (
-            <div
-              key={topic.id}
-              className="rounded-xl border border-border bg-card p-5"
-            >
-              <h3 className="font-semibold text-white text-lg mb-3 flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-500/10 text-indigo-400 text-xs font-bold">
-                  {index + 1}
-                </span>
-                {topic.title}
-              </h3>
-              <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
-                {topic.summary}
-              </div>
-            </div>
-          ))}
-        </div>
 
         {/* Previous Attempts */}
         {chapter.quizAttempts.length > 0 && (

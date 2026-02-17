@@ -10,13 +10,19 @@ export async function DELETE() {
     }
 
     // Delete all quiz attempts for this user
-    const deleted = await prisma.quizAttempt.deleteMany({
+    const deletedAttempts = await prisma.quizAttempt.deleteMany({
+      where: { userId },
+    });
+
+    // Also delete all topic statuses (got_it / revise_later)
+    const deletedStatuses = await prisma.topicStatus.deleteMany({
       where: { userId },
     });
 
     return NextResponse.json({
       success: true,
-      deleted: deleted.count,
+      deletedAttempts: deletedAttempts.count,
+      deletedStatuses: deletedStatuses.count,
     });
   } catch (error) {
     console.error("Reset progress error:", error);

@@ -1,0 +1,368 @@
+"use client";
+
+import { useState, useRef, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  CheckCircle2,
+  BookmarkPlus,
+  ChevronLeft,
+  ChevronRight,
+  Share2,
+  Loader2,
+  Sparkles,
+  PlayCircle,
+  RotateCcw,
+} from "lucide-react";
+import Link from "next/link";
+
+type TopicWithStatus = {
+  id: string;
+  title: string;
+  summary: string;
+  order: number;
+  status?: string | null; // "got_it" | "revise_later" | null
+};
+
+interface TopicCardsProps {
+  topics: TopicWithStatus[];
+  chapterId: string;
+  chapterTitle: string;
+  hasQuiz: boolean;
+  mcqCount: number;
+}
+
+export function TopicCards({
+  topics,
+  chapterId,
+  chapterTitle,
+  hasQuiz,
+  mcqCount,
+}: TopicCardsProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [statuses, setStatuses] = useState<Record<string, string | null>>(() => {
+    const initial: Record<string, string | null> = {};
+    topics.forEach((t) => {
+      initial[t.id] = t.status ?? null;
+    });
+    return initial;
+  });
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [showSummary, setShowSummary] = useState(false);
+
+  // Swipe state
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const currentTopic = topics[currentIndex];
+  const totalTopics = topics.length;
+  const progress = ((currentIndex + 1) / totalTopics) * 100;
+
+  const gotItCount = Object.values(statuses).filter((s) => s === "got_it").length;
+  const reviseLaterCount = Object.values(statuses).filter((s) => s === "revise_later").length;
+  const unmarkedCount = totalTopics - gotItCount - reviseLaterCount;
+
+  const goNext = useCallback(() => {
+    if (currentIndex < totalTopics - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      setShowSummary(true);
+    }
+  }, [currentIndex, totalTopics]);
+
+  const goPrev = useCallback(() => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  }, [currentIndex]);
+
+  // Touch/swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        goNext(); // Swipe left = next
+      } else {
+        goPrev(); // Swipe right = previous
+      }
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  const setTopicStatus = async (topicId: string, status: string) => {
+    const currentStatus = statuses[topicId];
+
+    // If tapping the same status, remove it
+    if (currentStatus === status) {
+      setLoadingAction(`${topicId}-${status}`);
+      setStatuses((prev) => ({ ...prev, [topicId]: null }));
+      try {
+        await fetch("/api/topics/status", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topicId }),
+        });
+      } catch {
+        setStatuses((prev) => ({ ...prev, [topicId]: currentStatus }));
+      } finally {
+        setLoadingAction(null);
+      }
+      return;
+    }
+
+    setLoadingAction(`${topicId}-${status}`);
+    setStatuses((prev) => ({ ...prev, [topicId]: status }));
+    try {
+      await fetch("/api/topics/status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topicId, status }),
+      });
+    } catch {
+      setStatuses((prev) => ({ ...prev, [topicId]: currentStatus }));
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: currentTopic.title,
+          text: `Check out "${currentTopic.title}" from ${chapterTitle} on Revise AI!`,
+          url: window.location.href,
+        });
+      } catch {
+        // User cancelled share
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+    }
+  };
+
+  // Summary view after all cards
+  if (showSummary) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6 sm:p-8 text-center">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500/10 mb-4">
+            <Sparkles className="h-7 w-7 text-indigo-400" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">
+            Chapter Review Complete!
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            You&apos;ve gone through all {totalTopics} topics in this chapter.
+          </p>
+
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="rounded-lg bg-green-500/10 border border-green-500/20 p-3">
+              <div className="text-2xl font-bold text-green-400">{gotItCount}</div>
+              <div className="text-xs text-green-400/70">Got It</div>
+            </div>
+            <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3">
+              <div className="text-2xl font-bold text-amber-400">{reviseLaterCount}</div>
+              <div className="text-xs text-amber-400/70">Revise Later</div>
+            </div>
+            <div className="rounded-lg bg-slate-500/10 border border-slate-500/20 p-3">
+              <div className="text-2xl font-bold text-slate-400">{unmarkedCount}</div>
+              <div className="text-xs text-slate-400/70">Unmarked</div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCurrentIndex(0);
+                setShowSummary(false);
+              }}
+              className="gap-2"
+            >
+              <RotateCcw className="h-4 w-4" /> Review Again
+            </Button>
+            {hasQuiz && (
+              <Link href={`/quiz/${chapterId}`}>
+                <Button className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 border-0">
+                  <PlayCircle className="h-4 w-4" /> Start Quiz ({mcqCount} Qs)
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const topicStatus = statuses[currentTopic.id];
+
+  return (
+    <div className="space-y-4">
+      {/* Progress bar */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">
+          {currentIndex + 1} / {totalTopics}
+        </span>
+      </div>
+
+      {/* Card */}
+      <div
+        ref={cardRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="relative rounded-2xl border border-border bg-card overflow-hidden select-none"
+      >
+        {/* Card header */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 text-xs font-bold">
+              {currentIndex + 1}
+            </span>
+            <h3 className="font-semibold text-white text-lg">
+              {currentTopic.title}
+            </h3>
+          </div>
+          <button
+            onClick={handleShare}
+            className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
+            title="Share"
+          >
+            <Share2 className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Status badge */}
+        {topicStatus && (
+          <div className="px-5 pb-2">
+            <Badge
+              className={
+                topicStatus === "got_it"
+                  ? "bg-green-500/10 text-green-400 border-green-500/20"
+                  : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+              }
+            >
+              {topicStatus === "got_it" ? "Got It" : "Revise Later"}
+            </Badge>
+          </div>
+        )}
+
+        {/* Card content - scrollable */}
+        <div className="px-5 pb-5 max-h-[50vh] overflow-y-auto">
+          <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+            {currentTopic.summary}
+          </div>
+        </div>
+
+        {/* Action buttons */}
+        <div className="border-t border-border px-5 py-4 flex items-center justify-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setTopicStatus(currentTopic.id, "got_it")}
+            disabled={loadingAction !== null}
+            className={`gap-2 transition-all ${
+              topicStatus === "got_it"
+                ? "border-green-500/40 bg-green-500/10 text-green-400 hover:bg-green-500/20 hover:text-green-300"
+                : "hover:border-green-500/30 hover:text-green-400 hover:bg-green-500/5"
+            }`}
+          >
+            {loadingAction === `${currentTopic.id}-got_it` ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4" />
+            )}
+            Got It
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setTopicStatus(currentTopic.id, "revise_later")}
+            disabled={loadingAction !== null}
+            className={`gap-2 transition-all ${
+              topicStatus === "revise_later"
+                ? "border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 hover:text-amber-300"
+                : "hover:border-amber-500/30 hover:text-amber-400 hover:bg-amber-500/5"
+            }`}
+          >
+            {loadingAction === `${currentTopic.id}-revise_later` ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <BookmarkPlus className="h-4 w-4" />
+            )}
+            Revise Later
+          </Button>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={goPrev}
+          disabled={currentIndex === 0}
+          className="gap-1.5 text-muted-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Button>
+
+        {/* Dot indicators */}
+        <div className="flex gap-1.5 max-w-[200px] overflow-hidden justify-center">
+          {topics.map((t, i) => (
+            <button
+              key={t.id}
+              onClick={() => setCurrentIndex(i)}
+              className={`h-2 rounded-full transition-all ${
+                i === currentIndex
+                  ? "w-6 bg-indigo-500"
+                  : statuses[t.id] === "got_it"
+                  ? "w-2 bg-green-500/50"
+                  : statuses[t.id] === "revise_later"
+                  ? "w-2 bg-amber-500/50"
+                  : "w-2 bg-secondary"
+              }`}
+            />
+          ))}
+        </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={goNext}
+          className="gap-1.5 text-muted-foreground"
+        >
+          {currentIndex === totalTopics - 1 ? "Finish" : "Next"}
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Swipe hint - only show on first card */}
+      {currentIndex === 0 && (
+        <p className="text-center text-xs text-muted-foreground/60">
+          Swipe left or right to navigate cards
+        </p>
+      )}
+    </div>
+  );
+}

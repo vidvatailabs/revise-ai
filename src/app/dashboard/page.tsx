@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
   BookOpen,
+  BookmarkPlus,
   ChevronRight,
   Trophy,
   Flame,
@@ -59,6 +60,21 @@ export default async function DashboardPage() {
     take: 5,
   });
 
+  // Count "revise later" topics for the current class
+  const reviseLaterCount = await prisma.topicStatus.count({
+    where: {
+      userId,
+      status: "revise_later",
+      topic: {
+        chapter: {
+          subject: {
+            class: user.selectedClass,
+          },
+        },
+      },
+    },
+  });
+
   // Calculate stats
   const totalChapters = subjects.reduce(
     (sum, s) => sum + s.chapters.length,
@@ -90,7 +106,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           <div className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
               <BookOpen className="h-4 w-4" />
@@ -109,7 +125,7 @@ export default async function DashboardPage() {
               {completedChapters}/{totalChapters}
             </div>
           </div>
-          <div className="rounded-xl border border-border bg-card p-4 col-span-2 sm:col-span-1">
+          <div className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
               <Trophy className="h-4 w-4" />
               Quizzes Taken
@@ -118,6 +134,18 @@ export default async function DashboardPage() {
               {recentAttempts.length}
             </div>
           </div>
+          <Link
+            href="/revise-later"
+            className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 hover:bg-amber-500/10 transition-all group"
+          >
+            <div className="flex items-center gap-2 text-amber-400/70 text-sm mb-1">
+              <BookmarkPlus className="h-4 w-4" />
+              Revise Later
+            </div>
+            <div className="text-2xl font-bold text-amber-400 group-hover:text-amber-300">
+              {reviseLaterCount}
+            </div>
+          </Link>
         </div>
 
         {/* Subjects Grid */}
