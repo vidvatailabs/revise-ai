@@ -12,6 +12,8 @@ import {
   Trophy,
   Flame,
   GraduationCap,
+  Clock,
+  Rocket,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -40,9 +42,13 @@ export default async function DashboardPage() {
     orderBy: { order: "asc" },
   });
 
-  // Fetch recent quiz attempts
+  // Fetch recent quiz attempts — filtered to current class only
+  const subjectIds = subjects.map((s) => s.id);
   const recentAttempts = await prisma.quizAttempt.findMany({
-    where: { userId },
+    where: {
+      userId,
+      chapter: { subjectId: { in: subjectIds } },
+    },
     include: {
       chapter: {
         include: { subject: true },
@@ -114,49 +120,69 @@ export default async function DashboardPage() {
         <h2 className="text-xl font-semibold text-white mb-4">
           Your Subjects
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          {subjects.map((subject) => {
-            const total = subject.chapters.length;
-            const completed = subject.chapters.filter(
-              (c) => c.quizAttempts.length > 0
-            ).length;
-            const progress = total > 0 ? (completed / total) * 100 : 0;
 
-            return (
-              <Link
-                key={subject.id}
-                href={`/subjects/${subject.id}`}
-                className="group rounded-xl border border-border bg-card p-5 transition-all hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5 hover:-translate-y-0.5"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">{subject.icon}</span>
-                    <div>
-                      <h3 className="font-semibold text-white text-lg group-hover:text-indigo-300 transition-colors">
-                        {subject.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {total} chapters
-                      </p>
+        {subjects.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-indigo-500/30 bg-indigo-500/5 p-8 sm:p-12 text-center mb-10">
+            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10 mb-4">
+              <Rocket className="h-8 w-8 text-indigo-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">
+              Coming Soon! 🚀
+            </h3>
+            <p className="text-muted-foreground max-w-md mx-auto mb-4">
+              Class {user.selectedClass} content is being prepared by our team.
+              We&apos;re working hard to bring you revision material, topic summaries, and quizzes.
+            </p>
+            <div className="inline-flex items-center gap-2 text-sm text-indigo-400 bg-indigo-500/10 px-4 py-2 rounded-full">
+              <Clock className="h-4 w-4" />
+              Check back soon — or try Class 10 which is live now!
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            {subjects.map((subject) => {
+              const total = subject.chapters.length;
+              const completed = subject.chapters.filter(
+                (c) => c.quizAttempts.length > 0
+              ).length;
+              const progress = total > 0 ? (completed / total) * 100 : 0;
+
+              return (
+                <Link
+                  key={subject.id}
+                  href={`/subjects/${subject.id}`}
+                  className="group rounded-xl border border-border bg-card p-5 transition-all hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5 hover:-translate-y-0.5"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">{subject.icon}</span>
+                      <div>
+                        <h3 className="font-semibold text-white text-lg group-hover:text-indigo-300 transition-colors">
+                          {subject.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {total} chapters
+                        </p>
+                      </div>
                     </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-indigo-400 transition-colors mt-1" />
                   </div>
-                  <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-indigo-400 transition-colors mt-1" />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {completed}/{total} completed
-                    </span>
-                    <span className="text-indigo-400 font-medium">
-                      {Math.round(progress)}%
-                    </span>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        {completed}/{total} completed
+                      </span>
+                      <span className="text-indigo-400 font-medium">
+                        {Math.round(progress)}%
+                      </span>
+                    </div>
+                    <Progress value={progress} className="h-2" />
                   </div>
-                  <Progress value={progress} className="h-2" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
         {/* Recent Activity */}
         {recentAttempts.length > 0 && (
