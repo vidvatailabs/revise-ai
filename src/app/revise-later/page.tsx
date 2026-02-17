@@ -194,7 +194,7 @@ export default async function ReviseLaterPage() {
                         <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-amber-400 transition-colors flex-shrink-0" />
                       </div>
                       <div className="space-y-1.5">
-                        {topics.map((topic) => (
+                        {topics.slice(0, 3).map((topic) => (
                           <div
                             key={topic.id}
                             className="flex items-center gap-2 text-sm text-muted-foreground"
@@ -203,6 +203,11 @@ export default async function ReviseLaterPage() {
                             {topic.title}
                           </div>
                         ))}
+                        {topics.length > 3 && (
+                          <p className="text-xs text-amber-400/60 pl-3.5">
+                            +{topics.length - 3} more
+                          </p>
+                        )}
                       </div>
                     </Link>
                   ))}
