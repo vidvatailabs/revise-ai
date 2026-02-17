@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getOrCreateUser } from "@/lib/user";
 import { prisma } from "@/lib/prisma";
 import { AppHeader } from "@/components/app-header";
+import { ResetProgress } from "@/components/reset-progress";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -75,14 +76,17 @@ export default async function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-            Welcome back! 👋
-          </h1>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <GraduationCap className="h-4 w-4" />
-            <span>Class {user.selectedClass} | CBSE</span>
+        <div className="flex items-start justify-between mb-8">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+              Welcome back! 👋
+            </h1>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <GraduationCap className="h-4 w-4" />
+              <span>Class {user.selectedClass} | CBSE</span>
+            </div>
           </div>
+          {completedChapters > 0 && <ResetProgress />}
         </div>
 
         {/* Stats Cards */}
