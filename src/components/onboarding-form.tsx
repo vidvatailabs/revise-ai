@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Loader2, ArrowLeft } from "lucide-react";
+import { GraduationCap, Loader2, ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
 
 const classes = [
@@ -38,8 +38,17 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const isSameClass = isChanging && selectedClass === currentClass;
+
   const handleSubmit = async () => {
     if (!selectedClass) return;
+
+    // Don't submit if user selected the same class they already have
+    if (isSameClass) {
+      router.push("/dashboard");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/onboarding", {
@@ -48,12 +57,11 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
         body: JSON.stringify({ selectedClass }),
       });
       if (res.ok) {
-        router.refresh();
-        router.push("/dashboard");
+        // Hard navigation to ensure dashboard fetches fresh data for the new class
+        window.location.href = "/dashboard";
       }
     } catch (error) {
       console.error("Failed to save class:", error);
-    } finally {
       setLoading(false);
     }
   };
@@ -85,34 +93,45 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
       </div>
 
       <div className="space-y-3 mb-8">
-        {classes.map((cls) => (
-          <button
-            key={cls.value}
-            onClick={() => setSelectedClass(cls.value)}
-            className={`w-full p-5 rounded-xl border text-left transition-all relative ${
-              selectedClass === cls.value
-                ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/10"
-                : "border-border hover:border-indigo-500/40 bg-card hover:bg-card/80"
-            }`}
-          >
-            {cls.recommended && (
-              <span className="absolute top-3 right-3 text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full">
-                Recommended
-              </span>
-            )}
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{cls.emoji}</span>
-              <div>
-                <div className="font-semibold text-white text-lg">
-                  {cls.label}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {cls.description}
+        {classes.map((cls) => {
+          const isCurrent = isChanging && currentClass === cls.value;
+          return (
+            <button
+              key={cls.value}
+              onClick={() => setSelectedClass(cls.value)}
+              className={`w-full p-5 rounded-xl border text-left transition-all relative ${
+                selectedClass === cls.value
+                  ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/10"
+                  : "border-border hover:border-indigo-500/40 bg-card hover:bg-card/80"
+              }`}
+            >
+              <div className="absolute top-3 right-3 flex items-center gap-2">
+                {isCurrent && (
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full">
+                    <Check className="h-3 w-3" />
+                    Current
+                  </span>
+                )}
+                {cls.recommended && (
+                  <span className="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full">
+                    Recommended
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{cls.emoji}</span>
+                <div>
+                  <div className="font-semibold text-white text-lg">
+                    {cls.label}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {cls.description}
+                  </div>
                 </div>
               </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
 
       <Button
@@ -124,10 +143,10 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
         {loading ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Saving...
+            Updating...
           </>
         ) : isChanging ? (
-          "Update Class →"
+          isSameClass ? "Back to Dashboard →" : "Update Class →"
         ) : (
           "Continue →"
         )}
