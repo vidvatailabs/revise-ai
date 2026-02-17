@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   CheckCircle2,
   BookmarkPlus,
+  BookmarkCheck,
   ChevronLeft,
   ChevronRight,
   Share2,
@@ -446,8 +447,8 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
               disabled={loadingAction !== null}
               className={`gap-2 ${
                 topicStatus === "got_it"
-                  ? "border-green-500/40 bg-green-500/10 text-green-400 active:bg-green-500/20"
-                  : "active:border-green-500/30 active:text-green-400"
+                  ? "border-green-500/40 bg-green-500/10 text-green-400 hover:bg-green-500/10 hover:text-green-400"
+                  : "hover:bg-background hover:text-foreground active:border-green-500/30 active:text-green-400"
               }`}
             >
               {loadingAction === `${currentTopic.id}-got_it` ? (
@@ -464,12 +465,14 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
               disabled={loadingAction !== null}
               className={`gap-2 ${
                 topicStatus === "revise_later"
-                  ? "border-amber-500/40 bg-amber-500/10 text-amber-400 active:bg-amber-500/20"
-                  : "active:border-amber-500/30 active:text-amber-400"
+                  ? "border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/10 hover:text-amber-400"
+                  : "hover:bg-background hover:text-foreground active:border-amber-500/30 active:text-amber-400"
               }`}
             >
               {loadingAction === `${currentTopic.id}-revise_later` ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
+              ) : topicStatus === "revise_later" ? (
+                <BookmarkCheck className="h-4 w-4" />
               ) : (
                 <BookmarkPlus className="h-4 w-4" />
               )}
