@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -32,6 +32,8 @@ interface TopicCardsProps {
   mcqCount: number;
 }
 
+type SwipeDirection = "left" | "right" | null;
+
 export function TopicCards({
   topics,
   chapterId,
@@ -40,71 +42,145 @@ export function TopicCards({
   mcqCount,
 }: TopicCardsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [statuses, setStatuses] = useState<Record<string, string | null>>(() => {
-    const initial: Record<string, string | null> = {};
-    topics.forEach((t) => {
-      initial[t.id] = t.status ?? null;
-    });
-    return initial;
-  });
+  const [statuses, setStatuses] = useState<Record<string, string | null>>(
+    () => {
+      const initial: Record<string, string | null> = {};
+      topics.forEach((t) => {
+        initial[t.id] = t.status ?? null;
+      });
+      return initial;
+    }
+  );
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
 
-  // Swipe state
+  // Animation state
+  const [animating, setAnimating] = useState(false);
+  const [exitDirection, setExitDirection] = useState<SwipeDirection>(null);
+  const [enterDirection, setEnterDirection] = useState<SwipeDirection>(null);
+
+  // Swipe tracking
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef(0);
+  const touchCurrentX = useRef(0);
+  const isDragging = useRef(false);
+  const isVerticalScroll = useRef(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const swipeAreaRef = useRef<HTMLDivElement>(null);
 
   const currentTopic = topics[currentIndex];
   const totalTopics = topics.length;
   const progress = ((currentIndex + 1) / totalTopics) * 100;
 
-  const gotItCount = Object.values(statuses).filter((s) => s === "got_it").length;
-  const reviseLaterCount = Object.values(statuses).filter((s) => s === "revise_later").length;
+  const gotItCount = Object.values(statuses).filter(
+    (s) => s === "got_it"
+  ).length;
+  const reviseLaterCount = Object.values(statuses).filter(
+    (s) => s === "revise_later"
+  ).length;
   const unmarkedCount = totalTopics - gotItCount - reviseLaterCount;
 
+  const animateTransition = useCallback(
+    (direction: "left" | "right", nextIndex: number | "summary") => {
+      if (animating) return;
+      setAnimating(true);
+
+      // Exit current card
+      setExitDirection(direction);
+
+      setTimeout(() => {
+        // After exit, update index and enter new card
+        if (nextIndex === "summary") {
+          setShowSummary(true);
+        } else {
+          setCurrentIndex(nextIndex);
+        }
+        setExitDirection(null);
+        setEnterDirection(direction === "left" ? "right" : "left");
+
+        // Clear enter animation
+        setTimeout(() => {
+          setEnterDirection(null);
+          setAnimating(false);
+        }, 300);
+      }, 250);
+    },
+    [animating]
+  );
+
   const goNext = useCallback(() => {
+    if (animating) return;
     if (currentIndex < totalTopics - 1) {
-      setCurrentIndex((prev) => prev + 1);
+      animateTransition("left", currentIndex + 1);
     } else {
-      setShowSummary(true);
+      animateTransition("left", "summary");
     }
-  }, [currentIndex, totalTopics]);
+  }, [currentIndex, totalTopics, animating, animateTransition]);
 
   const goPrev = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
-  }, [currentIndex]);
+    if (animating || currentIndex === 0) return;
+    animateTransition("right", currentIndex - 1);
+  }, [currentIndex, animating, animateTransition]);
 
-  // Touch/swipe handlers
+  // Touch/swipe handlers - only on the swipe area, not buttons
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (animating) return;
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchCurrentX.current = e.touches[0].clientX;
+    isDragging.current = true;
+    isVerticalScroll.current = false;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
+    if (!isDragging.current || animating) return;
+
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    const diffX = currentX - touchStartX.current;
+    const diffY = currentY - touchStartY.current;
+
+    // Determine if this is a vertical scroll (first significant movement)
+    if (!isVerticalScroll.current && Math.abs(diffY) > 10 && Math.abs(diffY) > Math.abs(diffX)) {
+      isVerticalScroll.current = true;
+      isDragging.current = false;
+      setDragOffset(0);
+      return;
+    }
+
+    // Only track horizontal drags
+    if (!isVerticalScroll.current && Math.abs(diffX) > 5) {
+      touchCurrentX.current = currentX;
+      setDragOffset(diffX);
+    }
   };
 
   const handleTouchEnd = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50;
+    if (!isDragging.current || animating) {
+      isDragging.current = false;
+      setDragOffset(0);
+      return;
+    }
+
+    isDragging.current = false;
+    const diff = touchStartX.current - touchCurrentX.current;
+    const threshold = 60;
 
     if (Math.abs(diff) > threshold) {
       if (diff > 0) {
-        goNext(); // Swipe left = next
+        goNext();
       } else {
-        goPrev(); // Swipe right = previous
+        goPrev();
       }
     }
-    touchStartX.current = 0;
-    touchEndX.current = 0;
+
+    setDragOffset(0);
   };
 
   const setTopicStatus = async (topicId: string, status: string) => {
     const currentStatus = statuses[topicId];
 
-    // If tapping the same status, remove it
+    // If tapping the same status, remove it (toggle)
     if (currentStatus === status) {
       setLoadingAction(`${topicId}-${status}`);
       setStatuses((prev) => ({ ...prev, [topicId]: null }));
@@ -153,11 +229,74 @@ export function TopicCards({
     }
   };
 
+  // Compute card transform style
+  const getCardStyle = (): React.CSSProperties => {
+    // During drag - follow finger with slight rotation
+    if (dragOffset !== 0) {
+      const rotation = (dragOffset / 400) * 8; // Max ~8deg rotation
+      const opacity = 1 - Math.abs(dragOffset) / 600;
+      return {
+        transform: `translateX(${dragOffset}px) rotate(${rotation}deg)`,
+        opacity: Math.max(opacity, 0.5),
+        transition: "none",
+      };
+    }
+
+    // Exit animation
+    if (exitDirection === "left") {
+      return {
+        transform: "translateX(-120%) rotate(-12deg)",
+        opacity: 0,
+        transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
+      };
+    }
+    if (exitDirection === "right") {
+      return {
+        transform: "translateX(120%) rotate(12deg)",
+        opacity: 0,
+        transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease",
+      };
+    }
+
+    // Enter animation
+    if (enterDirection === "right") {
+      return {
+        transform: "translateX(0) rotate(0deg)",
+        opacity: 1,
+        transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
+        animation: "cardEnterFromRight 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+      };
+    }
+    if (enterDirection === "left") {
+      return {
+        transform: "translateX(0) rotate(0deg)",
+        opacity: 1,
+        transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
+        animation: "cardEnterFromLeft 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+      };
+    }
+
+    return {
+      transform: "translateX(0) rotate(0deg)",
+      opacity: 1,
+      transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
+    };
+  };
+
   // Summary view after all cards
   if (showSummary) {
     return (
       <div className="space-y-6">
-        <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6 sm:p-8 text-center">
+        <style jsx>{`
+          @keyframes summaryPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        `}</style>
+        <div
+          className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-6 sm:p-8 text-center"
+          style={{ animation: "summaryPop 0.4s cubic-bezier(0.22, 1, 0.36, 1)" }}
+        >
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-indigo-500/10 mb-4">
             <Sparkles className="h-7 w-7 text-indigo-400" />
           </div>
@@ -170,15 +309,21 @@ export function TopicCards({
 
           <div className="grid grid-cols-3 gap-3 mb-6">
             <div className="rounded-lg bg-green-500/10 border border-green-500/20 p-3">
-              <div className="text-2xl font-bold text-green-400">{gotItCount}</div>
+              <div className="text-2xl font-bold text-green-400">
+                {gotItCount}
+              </div>
               <div className="text-xs text-green-400/70">Got It</div>
             </div>
             <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3">
-              <div className="text-2xl font-bold text-amber-400">{reviseLaterCount}</div>
+              <div className="text-2xl font-bold text-amber-400">
+                {reviseLaterCount}
+              </div>
               <div className="text-xs text-amber-400/70">Revise Later</div>
             </div>
             <div className="rounded-lg bg-slate-500/10 border border-slate-500/20 p-3">
-              <div className="text-2xl font-bold text-slate-400">{unmarkedCount}</div>
+              <div className="text-2xl font-bold text-slate-400">
+                {unmarkedCount}
+              </div>
               <div className="text-xs text-slate-400/70">Unmarked</div>
             </div>
           </div>
@@ -211,6 +356,30 @@ export function TopicCards({
 
   return (
     <div className="space-y-4">
+      {/* Keyframe animations */}
+      <style jsx>{`
+        @keyframes cardEnterFromRight {
+          0% {
+            transform: translateX(80%) rotate(6deg);
+            opacity: 0;
+          }
+          100% {
+            transform: translateX(0) rotate(0deg);
+            opacity: 1;
+          }
+        }
+        @keyframes cardEnterFromLeft {
+          0% {
+            transform: translateX(-80%) rotate(-6deg);
+            opacity: 0;
+          }
+          100% {
+            transform: translateX(0) rotate(0deg);
+            opacity: 1;
+          }
+        }
+      `}</style>
+
       {/* Progress bar */}
       <div className="flex items-center gap-3">
         <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
@@ -224,93 +393,101 @@ export function TopicCards({
         </span>
       </div>
 
-      {/* Card */}
-      <div
-        ref={cardRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className="relative rounded-2xl border border-border bg-card overflow-hidden select-none"
-      >
-        {/* Card header */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 text-xs font-bold">
-              {currentIndex + 1}
-            </span>
-            <h3 className="font-semibold text-white text-lg">
-              {currentTopic.title}
-            </h3>
-          </div>
-          <button
-            onClick={handleShare}
-            className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
-            title="Share"
-          >
-            <Share2 className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Status badge */}
-        {topicStatus && (
-          <div className="px-5 pb-2">
-            <Badge
-              className={
-                topicStatus === "got_it"
-                  ? "bg-green-500/10 text-green-400 border-green-500/20"
-                  : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-              }
+      {/* Card with overflow hidden wrapper for exit animations */}
+      <div className="relative overflow-hidden rounded-2xl">
+        <div
+          ref={swipeAreaRef}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={getCardStyle()}
+          className="rounded-2xl border border-border bg-card overflow-hidden select-none will-change-transform"
+        >
+          {/* Card header */}
+          <div className="flex items-center justify-between px-5 pt-5 pb-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 text-xs font-bold">
+                {currentIndex + 1}
+              </span>
+              <h3 className="font-semibold text-white text-lg truncate">
+                {currentTopic.title}
+              </h3>
+            </div>
+            <button
+              onClick={handleShare}
+              className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors flex-shrink-0"
+              title="Share"
             >
-              {topicStatus === "got_it" ? "Got It" : "Revise Later"}
-            </Badge>
+              <Share2 className="h-4 w-4" />
+            </button>
           </div>
-        )}
 
-        {/* Card content - scrollable */}
-        <div className="px-5 pb-5 max-h-[50vh] overflow-y-auto">
-          <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
-            {currentTopic.summary}
+          {/* Status badge */}
+          {topicStatus && (
+            <div className="px-5 pb-2">
+              <Badge
+                className={
+                  topicStatus === "got_it"
+                    ? "bg-green-500/10 text-green-400 border-green-500/20"
+                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                }
+              >
+                {topicStatus === "got_it" ? "Got It" : "Revise Later"}
+              </Badge>
+            </div>
+          )}
+
+          {/* Card content - scrollable */}
+          <div className="px-5 pb-5 max-h-[50vh] overflow-y-auto">
+            <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+              {currentTopic.summary}
+            </div>
           </div>
-        </div>
 
-        {/* Action buttons */}
-        <div className="border-t border-border px-5 py-4 flex items-center justify-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setTopicStatus(currentTopic.id, "got_it")}
-            disabled={loadingAction !== null}
-            className={`gap-2 transition-all ${
-              topicStatus === "got_it"
-                ? "border-green-500/40 bg-green-500/10 text-green-400 hover:bg-green-500/20 hover:text-green-300"
-                : "hover:border-green-500/30 hover:text-green-400 hover:bg-green-500/5"
-            }`}
+          {/* Action buttons - stop propagation to prevent swipe interference */}
+          <div
+            className="border-t border-border px-5 py-4 flex items-center justify-center gap-3"
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
           >
-            {loadingAction === `${currentTopic.id}-got_it` ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <CheckCircle2 className="h-4 w-4" />
-            )}
-            Got It
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setTopicStatus(currentTopic.id, "revise_later")}
-            disabled={loadingAction !== null}
-            className={`gap-2 transition-all ${
-              topicStatus === "revise_later"
-                ? "border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 hover:text-amber-300"
-                : "hover:border-amber-500/30 hover:text-amber-400 hover:bg-amber-500/5"
-            }`}
-          >
-            {loadingAction === `${currentTopic.id}-revise_later` ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <BookmarkPlus className="h-4 w-4" />
-            )}
-            Revise Later
-          </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setTopicStatus(currentTopic.id, "got_it")}
+              disabled={loadingAction !== null}
+              className={`gap-2 transition-all ${
+                topicStatus === "got_it"
+                  ? "border-green-500/40 bg-green-500/10 text-green-400 hover:bg-green-500/20 hover:text-green-300"
+                  : "hover:border-green-500/30 hover:text-green-400 hover:bg-green-500/5"
+              }`}
+            >
+              {loadingAction === `${currentTopic.id}-got_it` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4" />
+              )}
+              Got It
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setTopicStatus(currentTopic.id, "revise_later")}
+              disabled={loadingAction !== null}
+              className={`gap-2 transition-all ${
+                topicStatus === "revise_later"
+                  ? "border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 hover:text-amber-300"
+                  : "hover:border-amber-500/30 hover:text-amber-400 hover:bg-amber-500/5"
+              }`}
+            >
+              {loadingAction === `${currentTopic.id}-revise_later` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <BookmarkPlus className="h-4 w-4" />
+              )}
+              Revise Later
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -320,7 +497,7 @@ export function TopicCards({
           variant="ghost"
           size="sm"
           onClick={goPrev}
-          disabled={currentIndex === 0}
+          disabled={currentIndex === 0 || animating}
           className="gap-1.5 text-muted-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -332,7 +509,13 @@ export function TopicCards({
           {topics.map((t, i) => (
             <button
               key={t.id}
-              onClick={() => setCurrentIndex(i)}
+              onClick={() => {
+                if (animating || i === currentIndex) return;
+                animateTransition(
+                  i > currentIndex ? "left" : "right",
+                  i
+                );
+              }}
               className={`h-2 rounded-full transition-all ${
                 i === currentIndex
                   ? "w-6 bg-indigo-500"
@@ -350,6 +533,7 @@ export function TopicCards({
           variant="ghost"
           size="sm"
           onClick={goNext}
+          disabled={animating}
           className="gap-1.5 text-muted-foreground"
         >
           {currentIndex === totalTopics - 1 ? "Finish" : "Next"}
