@@ -253,6 +253,30 @@ export function QuizClient({
             </div>
           ))}
         </div>
+
+        {/* Bottom Action Buttons (repeated for convenience after scrolling) */}
+        <div className="flex flex-wrap gap-3 justify-center pt-2">
+          <Button
+            onClick={() => {
+              setResult(null);
+              setAnswers({});
+            }}
+            variant="outline"
+            className="gap-2"
+          >
+            <RotateCcw className="h-4 w-4" /> Retake Quiz
+          </Button>
+          <Link href={`/chapters/${chapterId}`}>
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" /> Back to Chapter
+            </Button>
+          </Link>
+          <Link href="/dashboard">
+            <Button variant="outline" className="gap-2">
+              <Home className="h-4 w-4" /> Dashboard
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
