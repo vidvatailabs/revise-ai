@@ -17,6 +17,21 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Revise AI",
   },
+  openGraph: {
+    title: "Revise AI — Smart Exam Revision, Powered by AI",
+    description:
+      "Revise AI turns your syllabus into smart, personalised revision sessions. Focus on what matters, retain more, and ace every exam.",
+    url: "https://reviseai.vidvatailabs.com",
+    siteName: "Revise AI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Revise AI — Smart Exam Revision, Powered by AI",
+    description:
+      "AI-powered revision for CBSE students. Topic summaries, MCQ quizzes, and progress tracking.",
+  },
+  metadataBase: new URL("https://reviseai.vidvatailabs.com"),
 };
 
 export const viewport: Viewport = {
@@ -46,7 +61,8 @@ export default function RootLayout({
     >
       <html lang="en" className="dark">
         <head>
-          <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+          <link rel="apple-touch-icon" href="/icons/icon.svg" />
+          <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
         </head>
         <body className={inter.className}>
           {children}

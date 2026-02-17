@@ -84,3 +84,9 @@ html {
     radial-gradient(ellipse 60% 50% at 20% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 70%),
     radial-gradient(ellipse 50% 40% at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
 }
+
+/* Hide Clerk development mode badge (switch to production instance for proper fix) */
+.cl-internal-b3fm6y,
+div[data-mode="development"] {
+  display: none !important;
+}

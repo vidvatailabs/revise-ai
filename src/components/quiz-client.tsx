@@ -88,6 +88,16 @@ export function QuizClient({
         body: JSON.stringify({ chapterId, answers }),
       });
       const data = await res.json();
+
+      // Reorder results to match the quiz question order
+      if (data.results) {
+        const orderMap = new Map(mcqs.map((mcq, i) => [mcq.id, i]));
+        data.results.sort(
+          (a: QuizResultItem, b: QuizResultItem) =>
+            (orderMap.get(a.mcqId) ?? 0) - (orderMap.get(b.mcqId) ?? 0)
+        );
+      }
+
       setResult(data);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {

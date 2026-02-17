@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Loader2 } from "lucide-react";
+import { GraduationCap, Loader2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 const classes = [
   {
@@ -27,8 +28,13 @@ const classes = [
   },
 ];
 
-export function OnboardingForm() {
-  const [selectedClass, setSelectedClass] = useState<number | null>(null);
+interface OnboardingFormProps {
+  currentClass?: number | null;
+  isChanging?: boolean;
+}
+
+export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps) {
+  const [selectedClass, setSelectedClass] = useState<number | null>(currentClass ?? null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -53,15 +59,27 @@ export function OnboardingForm() {
 
   return (
     <div className="w-full max-w-lg mx-auto">
+      {isChanging && (
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Link>
+      )}
+
       <div className="text-center mb-8">
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 mb-4">
           <GraduationCap className="h-8 w-8 text-indigo-400" />
         </div>
         <h1 className="text-3xl font-bold text-white mb-2">
-          Welcome to Revise AI!
+          {isChanging ? "Change Your Class" : "Welcome to Revise AI!"}
         </h1>
         <p className="text-muted-foreground text-lg">
-          Select your class to get started with personalised revision
+          {isChanging
+            ? "Select a different class to update your subjects"
+            : "Select your class to get started with personalised revision"}
         </p>
       </div>
 
@@ -107,6 +125,8 @@ export function OnboardingForm() {
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Saving...
           </>
+        ) : isChanging ? (
+          "Update Class →"
         ) : (
           "Continue →"
         )}
