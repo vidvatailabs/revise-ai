@@ -48,6 +48,7 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
         body: JSON.stringify({ selectedClass }),
       });
       if (res.ok) {
+        router.refresh();
         router.push("/dashboard");
       }
     } catch (error) {
