@@ -7,9 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
   ChevronRight,
-  BookOpen,
   CheckCircle2,
-  Clock,
 } from "lucide-react";
 
 export default async function SubjectPage({
@@ -83,7 +81,7 @@ export default async function SubjectPage({
               <Link
                 key={chapter.id}
                 href={`/chapters/${chapter.id}`}
-                className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 sm:p-5 transition-all hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5"
+                className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 sm:p-5 transition-all hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5"
               >
                 {/* Chapter Number */}
                 <div
@@ -102,37 +100,29 @@ export default async function SubjectPage({
 
                 {/* Chapter Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors truncate">
-                    {chapter.title}
-                  </h3>
-                  <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <BookOpen className="h-3.5 w-3.5" />
-                      {chapter._count.topics} topics
-                    </span>
-                    {hasQuiz && (
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" />
-                        {chapter._count.mcqs} questions
-                      </span>
-                    )}
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors truncate">
+                      {chapter.title}
+                    </h3>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {lastAttempt && (
+                        <Badge
+                          className={`text-xs ${
+                            lastAttempt.score / lastAttempt.total >= 0.7
+                              ? "bg-green-500/10 text-green-400 border-green-500/20"
+                              : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
+                          }`}
+                        >
+                          {lastAttempt.score}/{lastAttempt.total}
+                        </Badge>
+                      )}
+                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-indigo-400 transition-colors" />
+                    </div>
                   </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {chapter._count.topics} topics{hasQuiz ? ` · ${chapter._count.mcqs} questions` : ""}
+                  </p>
                 </div>
-
-                {/* Score Badge */}
-                {lastAttempt && (
-                  <Badge
-                    className={
-                      lastAttempt.score / lastAttempt.total >= 0.7
-                        ? "bg-green-500/10 text-green-400 border-green-500/20"
-                        : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                    }
-                  >
-                    {lastAttempt.score}/{lastAttempt.total}
-                  </Badge>
-                )}
-
-                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-indigo-400 transition-colors flex-shrink-0" />
               </Link>
             );
           })}
