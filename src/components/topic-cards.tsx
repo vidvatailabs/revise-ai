@@ -394,7 +394,7 @@ export function TopicCards({
       </div>
 
       {/* Card with overflow hidden wrapper for exit animations */}
-      <div className="relative overflow-hidden rounded-2xl">
+      <div className="relative overflow-x-clip rounded-2xl" style={{ zIndex: 1 }}>
         <div
           ref={swipeAreaRef}
           onTouchStart={handleTouchStart}
@@ -409,7 +409,7 @@ export function TopicCards({
               <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 text-xs font-bold">
                 {currentIndex + 1}
               </span>
-              <h3 className="font-semibold text-white text-lg truncate">
+              <h3 className="font-semibold text-white text-lg leading-snug">
                 {currentTopic.title}
               </h3>
             </div>
@@ -456,10 +456,10 @@ export function TopicCards({
               size="sm"
               onClick={() => setTopicStatus(currentTopic.id, "got_it")}
               disabled={loadingAction !== null}
-              className={`gap-2 transition-all ${
+              className={`gap-2 ${
                 topicStatus === "got_it"
-                  ? "border-green-500/40 bg-green-500/10 text-green-400 hover:bg-green-500/20 hover:text-green-300"
-                  : "hover:border-green-500/30 hover:text-green-400 hover:bg-green-500/5"
+                  ? "border-green-500/40 bg-green-500/10 text-green-400 active:bg-green-500/20"
+                  : "active:border-green-500/30 active:text-green-400"
               }`}
             >
               {loadingAction === `${currentTopic.id}-got_it` ? (
@@ -474,10 +474,10 @@ export function TopicCards({
               size="sm"
               onClick={() => setTopicStatus(currentTopic.id, "revise_later")}
               disabled={loadingAction !== null}
-              className={`gap-2 transition-all ${
+              className={`gap-2 ${
                 topicStatus === "revise_later"
-                  ? "border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 hover:text-amber-300"
-                  : "hover:border-amber-500/30 hover:text-amber-400 hover:bg-amber-500/5"
+                  ? "border-amber-500/40 bg-amber-500/10 text-amber-400 active:bg-amber-500/20"
+                  : "active:border-amber-500/30 active:text-amber-400"
               }`}
             >
               {loadingAction === `${currentTopic.id}-revise_later` ? (

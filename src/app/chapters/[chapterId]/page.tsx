@@ -54,7 +54,7 @@ export default async function ChapterPage({
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <main className="relative z-0 max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Back Link */}
         <Link
           href={`/subjects/${chapter.subjectId}`}
