@@ -1,7 +1,7 @@
 {
   "name": "Revise AI",
   "short_name": "Revise AI",
-  "description": "Smart Exam Revision, Powered by AI — A VidvatAI Labs Product",
+  "description": "Smart Exam Revision, Powered by AI. A VidvatAI Labs Product",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#0b0f1a",

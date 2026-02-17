@@ -8,7 +8,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Revise AI — Smart Exam Revision, Powered by AI",
+  title: "Revise AI - Smart Exam Revision, Powered by AI",
   description:
     "Revise AI turns your syllabus into smart, personalised revision sessions. Focus on what matters, retain more, and ace every exam.",
   manifest: "/manifest.json",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "Revise AI",
   },
   openGraph: {
-    title: "Revise AI — Smart Exam Revision, Powered by AI",
+    title: "Revise AI - Smart Exam Revision, Powered by AI",
     description:
       "Revise AI turns your syllabus into smart, personalised revision sessions. Focus on what matters, retain more, and ace every exam.",
     url: "https://reviseai.vidvatailabs.com",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Revise AI — Smart Exam Revision, Powered by AI",
+    title: "Revise AI - Smart Exam Revision, Powered by AI",
     description:
       "AI-powered revision for CBSE students. Topic summaries, MCQ quizzes, and progress tracking.",
   },

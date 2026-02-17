@@ -83,7 +83,7 @@ export default async function ChapterPage({
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {latestAttempt
-                    ? `Last score: ${latestAttempt.score}/${latestAttempt.total} — Try to beat it!`
+                    ? `Last score: ${latestAttempt.score}/${latestAttempt.total} - Try to beat it!`
                     : `${chapter._count.mcqs} questions to test your understanding`}
                 </p>
               </div>

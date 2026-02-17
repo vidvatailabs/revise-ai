@@ -13,7 +13,7 @@ async function main() {
   await prisma.subject.deleteMany();
 
   // ═══════════════════════════════════════════
-  //  CLASS 10 — SOCIAL SCIENCE
+  //  CLASS 10  - SOCIAL SCIENCE
   // ═══════════════════════════════════════════
 
   // ── History ──
@@ -43,7 +43,7 @@ async function main() {
             title: "The Making of Nationalism in Europe",
             order: 2,
             summary:
-              "In the 19th century, Europe was divided into many kingdoms and duchies. Nationalist feelings were driven by a common culture, shared history, and language. Romanticism played a key role — artists and poets developed national identity through folk culture. The unification of Germany under Otto von Bismarck (through wars) and Italy under Giuseppe Mazzini/Garibaldi were landmark events. Nationalism was no longer tied to democracy and revolution; it became aligned with conservatism and imperialism by the late 1800s.",
+              "In the 19th century, Europe was divided into many kingdoms and duchies. Nationalist feelings were driven by a common culture, shared history, and language. Romanticism played a key role  - artists and poets developed national identity through folk culture. The unification of Germany under Otto von Bismarck (through wars) and Italy under Giuseppe Mazzini/Garibaldi were landmark events. Nationalism was no longer tied to democracy and revolution; it became aligned with conservatism and imperialism by the late 1800s.",
           },
         ],
       },
@@ -65,7 +65,7 @@ async function main() {
             optionC: "Otto von Bismarck",
             optionD: "Napoleon Bonaparte",
             correctAnswer: "C",
-            explanation: "Otto von Bismarck, the Chief Minister of Prussia, led the unification of Germany through a policy of 'blood and iron' — three wars over seven years.",
+            explanation: "Otto von Bismarck, the Chief Minister of Prussia, led the unification of Germany through a policy of 'blood and iron'  - three wars over seven years.",
           },
           {
             question: "The Treaty of Vienna of 1815 was drawn up at the Congress hosted by which country's Chancellor?",
@@ -107,32 +107,32 @@ async function main() {
       topics: {
         create: [
           {
-            title: "The Non-Cooperation Movement",
+            title: "The Non -Cooperation Movement",
             order: 1,
             summary:
-              "Mahatma Gandhi launched the Non-Cooperation Movement in 1920 against British rule. He proposed that if Indians refused to cooperate, British rule would collapse within a year. The movement involved boycotting foreign goods, surrendering government titles, and leaving government institutions. It was called off after the Chauri Chaura incident in 1922, where a violent mob set fire to a police station. Despite being withdrawn, the movement was significant in bringing masses into the national struggle.",
+              "Mahatma Gandhi launched the Non -Cooperation Movement in 1920 against British rule. He proposed that if Indians refused to cooperate, British rule would collapse within a year. The movement involved boycotting foreign goods, surrendering government titles, and leaving government institutions. It was called off after the Chauri Chaura incident in 1922, where a violent mob set fire to a police station. Despite being withdrawn, the movement was significant in bringing masses into the national struggle.",
           },
           {
             title: "The Civil Disobedience Movement",
             order: 2,
             summary:
-              "The Civil Disobedience Movement began with the Dandi March on 12 March 1930 when Gandhi marched 240 miles from Sabarmati to Dandi to break the salt law. Unlike Non-Cooperation (which involved boycotts), this movement asked people to break colonial laws. People manufactured salt, boycotted foreign cloth, and refused to pay taxes. It drew participation from rich peasants, poor peasants, business classes, and women. The movement was called off with the Gandhi-Irwin Pact of 1931.",
+              "The Civil Disobedience Movement began with the Dandi March on 12 March 1930 when Gandhi marched 240 miles from Sabarmati to Dandi to break the salt law. Unlike Non -Cooperation (which involved boycotts), this movement asked people to break colonial laws. People manufactured salt, boycotted foreign cloth, and refused to pay taxes. It drew participation from rich peasants, poor peasants, business classes, and women. The movement was called off with the Gandhi -Irwin Pact of 1931.",
           },
         ],
       },
       mcqs: {
         create: [
           {
-            question: "The Non-Cooperation Movement was launched in which year?",
+            question: "The Non -Cooperation Movement was launched in which year?",
             optionA: "1919",
             optionB: "1920",
             optionC: "1922",
             optionD: "1930",
             correctAnswer: "B",
-            explanation: "The Non-Cooperation Movement was launched by Mahatma Gandhi in January 1920 to protest British colonial rule.",
+            explanation: "The Non -Cooperation Movement was launched by Mahatma Gandhi in January 1920 to protest British colonial rule.",
           },
           {
-            question: "Why was the Non-Cooperation Movement called off?",
+            question: "Why was the Non -Cooperation Movement called off?",
             optionA: "British agreed to Indian demands",
             optionB: "The Jallianwala Bagh massacre",
             optionC: "The Chauri Chaura incident",
@@ -142,7 +142,7 @@ async function main() {
           },
           {
             question: "The Dandi March was associated with which movement?",
-            optionA: "Non-Cooperation Movement",
+            optionA: "Non -Cooperation Movement",
             optionB: "Quit India Movement",
             optionC: "Civil Disobedience Movement",
             optionD: "Khilafat Movement",
@@ -159,13 +159,13 @@ async function main() {
             explanation: "Gandhi walked 240 miles from his Sabarmati Ashram to the coastal village of Dandi to break the salt law.",
           },
           {
-            question: "The Gandhi-Irwin Pact was signed in which year?",
+            question: "The Gandhi -Irwin Pact was signed in which year?",
             optionA: "1929",
             optionB: "1930",
             optionC: "1931",
             optionD: "1932",
             correctAnswer: "C",
-            explanation: "The Gandhi-Irwin Pact was signed on 5 March 1931, leading to the temporary suspension of the Civil Disobedience Movement.",
+            explanation: "The Gandhi -Irwin Pact was signed on 5 March 1931, leading to the temporary suspension of the Civil Disobedience Movement.",
           },
         ],
       },
@@ -180,23 +180,23 @@ async function main() {
       topics: {
         create: [
           {
-            title: "The Pre-Modern World and Silk Routes",
+            title: "The Pre -Modern World and Silk Routes",
             order: 1,
             summary:
-              "The Silk Routes are a good example of pre-modern trade and cultural links. These routes connected Asia with Europe and North Africa. Goods like Chinese pottery, textiles, and spices travelled these routes. Along with trade, ideas, inventions, and even diseases spread. Food crops like potatoes, soya, groundnuts, maize, and tomatoes were introduced to Europe from the Americas after Columbus's discovery. This 'Columbian exchange' transformed lives across the world.",
+              "The Silk Routes are a good example of pre -modern trade and cultural links. These routes connected Asia with Europe and North Africa. Goods like Chinese pottery, textiles, and spices travelled these routes. Along with trade, ideas, inventions, and even diseases spread. Food crops like potatoes, soya, groundnuts, maize, and tomatoes were introduced to Europe from the Americas after Columbus's discovery. This 'Columbian exchange' transformed lives across the world.",
           },
           {
             title: "The Nineteenth Century Global Economy",
             order: 2,
             summary:
-              "The 19th century saw the growth of a truly global economy. Britain grew by importing food and raw materials from colonies. Technology (railways, steamships, telegraph) enabled faster trade. Indentured labour from India replaced slave labour on plantations in the Caribbean, Mauritius, and Fiji. The Great Depression of 1929 devastated the world economy — production and trade fell, unemployment rose, and prices collapsed. India's exports and imports halved during 1928-1934.",
+              "The 19th century saw the growth of a truly global economy. Britain grew by importing food and raw materials from colonies. Technology (railways, steamships, telegraph) enabled faster trade. Indentured labour from India replaced slave labour on plantations in the Caribbean, Mauritius, and Fiji. The Great Depression of 1929 devastated the world economy  - production and trade fell, unemployment rose, and prices collapsed. India's exports and imports halved during 1928 -1934.",
           },
         ],
       },
       mcqs: {
         create: [
           {
-            question: "Which routes connected Asia with Europe and North Africa in pre-modern times?",
+            question: "Which routes connected Asia with Europe and North Africa in pre -modern times?",
             optionA: "Spice Routes",
             optionB: "Silk Routes",
             optionC: "Trade Routes",
@@ -266,13 +266,13 @@ async function main() {
             title: "Types of Resources",
             order: 1,
             summary:
-              "Resources are classified based on origin (biotic/abiotic), exhaustibility (renewable/non-renewable), ownership (individual/community/national/international), and development status (potential/developed/stock/reserve). India has diverse resources — from the black soil of the Deccan to the alluvial plains of the north. Sustainable development means using resources wisely so future generations can benefit too. Agenda 21 at the Rio Summit (1992) was a landmark declaration on sustainable development.",
+              "Resources are classified based on origin (biotic/abiotic), exhaustibility (renewable/non -renewable), ownership (individual/community/national/international), and development status (potential/developed/stock/reserve). India has diverse resources  - from the black soil of the Deccan to the alluvial plains of the north. Sustainable development means using resources wisely so future generations can benefit too. Agenda 21 at the Rio Summit (1992) was a landmark declaration on sustainable development.",
           },
           {
             title: "Land Resources and Soil Types",
             order: 2,
             summary:
-              "India has diverse soil types: Alluvial soil (most widespread, found in northern plains, very fertile), Black/Regur soil (Deccan plateau, ideal for cotton), Red and Yellow soil (eastern/southern Deccan, develops on crystalline rocks), Laterite soil (heavy rainfall areas, used for tea/coffee), Arid soil (western Rajasthan, sandy and saline), and Forest soil (hilly areas). Soil erosion by wind and water is a major problem — solutions include contour ploughing, terrace farming, and shelter belts.",
+              "India has diverse soil types: Alluvial soil (most widespread, found in northern plains, very fertile), Black/Regur soil (Deccan plateau, ideal for cotton), Red and Yellow soil (eastern/southern Deccan, develops on crystalline rocks), Laterite soil (heavy rainfall areas, used for tea/coffee), Arid soil (western Rajasthan, sandy and saline), and Forest soil (hilly areas). Soil erosion by wind and water is a major problem  - solutions include contour ploughing, terrace farming, and shelter belts.",
           },
         ],
       },
@@ -285,7 +285,7 @@ async function main() {
             optionC: "Black soil (Regur)",
             optionD: "Laterite soil",
             correctAnswer: "C",
-            explanation: "Black soil (also called Regur) is found in the Deccan plateau and is ideal for growing cotton due to its moisture-retaining capacity.",
+            explanation: "Black soil (also called Regur) is found in the Deccan plateau and is ideal for growing cotton due to its moisture -retaining capacity.",
           },
           {
             question: "Agenda 21 was declared at which international summit?",
@@ -312,16 +312,16 @@ async function main() {
             optionC: "Wind erosion",
             optionD: "Splash erosion",
             correctAnswer: "C",
-            explanation: "Shelter belts — rows of trees planted to break the wind — are effective in preventing wind erosion, especially in desert and semi-arid areas.",
+            explanation: "Shelter belts  - rows of trees planted to break the wind  - are effective in preventing wind erosion, especially in desert and semi -arid areas.",
           },
           {
             question: "Resources that take millions of years to form are called:",
             optionA: "Renewable resources",
             optionB: "Biotic resources",
-            optionC: "Non-renewable resources",
+            optionC: "Non -renewable resources",
             optionD: "Community resources",
             correctAnswer: "C",
-            explanation: "Non-renewable resources like fossil fuels and minerals take millions of years to form and get exhausted with use.",
+            explanation: "Non -renewable resources like fossil fuels and minerals take millions of years to form and get exhausted with use.",
           },
         ],
       },
@@ -339,10 +339,10 @@ async function main() {
             title: "Water Scarcity and Conservation",
             order: 1,
             summary:
-              "India receives abundant rainfall but faces water scarcity due to uneven distribution, over-exploitation of groundwater, and growing demand from agriculture and industry. Only 1/3 of rainfall is effectively used. Urbanisation and industrialisation have increased water demand manifold. Rajasthan's Indira Gandhi Canal has transformed desert areas. Water harvesting — like rooftop rainwater collection, tankas in Rajasthan, and bamboo drip irrigation in Meghalaya — offers sustainable solutions.",
+              "India receives abundant rainfall but faces water scarcity due to uneven distribution, over -exploitation of groundwater, and growing demand from agriculture and industry. Only 1/3 of rainfall is effectively used. Urbanisation and industrialisation have increased water demand manifold. Rajasthan's Indira Gandhi Canal has transformed desert areas. Water harvesting  - like rooftop rainwater collection, tankas in Rajasthan, and bamboo drip irrigation in Meghalaya  - offers sustainable solutions.",
           },
           {
-            title: "Dams — Multipurpose River Valley Projects",
+            title: "Dams  - Multipurpose River Valley Projects",
             order: 2,
             summary:
               "Multipurpose dams serve many purposes: irrigation, electricity generation, flood control, water supply, and recreation. Jawaharlal Nehru called them 'temples of modern India.' Major projects include Bhakra Nangal (Sutlej), Hirakud (Mahanadi), and Tehri Dam (Bhagirathi). However, dams face criticism: displacement of locals, environmental damage (deforestation, loss of biodiversity), sedimentation, and triggered earthquakes. The Narmada Bachao Andolan (led by Medha Patkar) opposed the Sardar Sarovar Dam due to displacement concerns.",
@@ -358,7 +358,7 @@ async function main() {
             optionC: "B.R. Ambedkar",
             optionD: "Sardar Patel",
             correctAnswer: "B",
-            explanation: "Jawaharlal Nehru called multipurpose dams the 'temples of modern India' as they were key to post-independence development.",
+            explanation: "Jawaharlal Nehru called multipurpose dams the 'temples of modern India' as they were key to post -independence development.",
           },
           {
             question: "The Narmada Bachao Andolan was led by:",
@@ -412,13 +412,13 @@ async function main() {
             title: "Types of Farming in India",
             order: 1,
             summary:
-              "India has diverse farming types: Subsistence farming (small plots, family labour, basic tools), Intensive subsistence (high labour input, small land), Commercial farming (large-scale, high inputs, sold in market), and Plantation (single crop, large estates — tea, coffee, rubber). About 2/3 of India's population depends on agriculture. The Green Revolution (1960s-70s) introduced HYV seeds and modern technology, mainly benefiting wheat and rice in Punjab, Haryana, and western UP.",
+              "India has diverse farming types: Subsistence farming (small plots, family labour, basic tools), Intensive subsistence (high labour input, small land), Commercial farming (large -scale, high inputs, sold in market), and Plantation (single crop, large estates  - tea, coffee, rubber). About 2/3 of India's population depends on agriculture. The Green Revolution (1960s -70s) introduced HYV seeds and modern technology, mainly benefiting wheat and rice in Punjab, Haryana, and western UP.",
           },
           {
             title: "Major Crops of India",
             order: 2,
             summary:
-              "India's major crops include: Rice (Kharif, needs high temperature and rainfall — WB, UP, Punjab), Wheat (Rabi, needs cool climate — UP, Punjab, Haryana), Millets (Jowar, Bajra, Ragi — dry regions), Sugarcane (UP, Maharashtra, Karnataka), Cotton (Maharashtra, Gujarat, MP), Jute (the 'Golden Fibre' — WB, Bihar), Tea (Assam, Darjeeling, Nilgiris), and Coffee (Karnataka, Kerala). Kharif crops are sown in June-July and harvested in September-October. Rabi crops are sown in October-November and harvested in March-April.",
+              "India's major crops include: Rice (Kharif, needs high temperature and rainfall  - WB, UP, Punjab), Wheat (Rabi, needs cool climate  - UP, Punjab, Haryana), Millets (Jowar, Bajra, Ragi  - dry regions), Sugarcane (UP, Maharashtra, Karnataka), Cotton (Maharashtra, Gujarat, MP), Jute (the 'Golden Fibre'  - WB, Bihar), Tea (Assam, Darjeeling, Nilgiris), and Coffee (Karnataka, Kerala). Kharif crops are sown in June -July and harvested in September -October. Rabi crops are sown in October -November and harvested in March -April.",
           },
         ],
       },
@@ -431,7 +431,7 @@ async function main() {
             optionC: "Tea and coffee",
             optionD: "Sugarcane and tobacco",
             correctAnswer: "B",
-            explanation: "The Green Revolution of the 1960s-70s primarily benefited wheat and rice production through HYV seeds, especially in Punjab, Haryana, and western UP.",
+            explanation: "The Green Revolution of the 1960s -70s primarily benefited wheat and rice production through HYV seeds, especially in Punjab, Haryana, and western UP.",
           },
           {
             question: "Which crop is called the 'Golden Fibre'?",
@@ -440,16 +440,16 @@ async function main() {
             optionC: "Jute",
             optionD: "Hemp",
             correctAnswer: "C",
-            explanation: "Jute is known as the 'Golden Fibre' due to its golden-brown colour. West Bengal is the largest producer.",
+            explanation: "Jute is known as the 'Golden Fibre' due to its golden -brown colour. West Bengal is the largest producer.",
           },
           {
             question: "Rabi crops are sown in which season?",
-            optionA: "June-July",
-            optionB: "October-November",
-            optionC: "March-April",
-            optionD: "January-February",
+            optionA: "June -July",
+            optionB: "October -November",
+            optionC: "March -April",
+            optionD: "January -February",
             correctAnswer: "B",
-            explanation: "Rabi crops (wheat, mustard, peas) are sown in October-November and harvested in March-April (winter season).",
+            explanation: "Rabi crops (wheat, mustard, peas) are sown in October -November and harvested in March -April (winter season).",
           },
           {
             question: "Which state is the largest producer of tea in India?",
@@ -495,13 +495,13 @@ async function main() {
             title: "Why Power Sharing is Desirable",
             order: 1,
             summary:
-              "Power sharing is desirable for two reasons: (1) Prudential — it reduces conflict between social groups, ensures political stability, and prevents tyranny of the majority (as seen in Sri Lanka's ethnic conflict between Sinhalese and Tamils). (2) Moral — it is the very spirit of democracy; citizens have a right to be consulted in governance. Belgium's power-sharing model (between Dutch, French, and German speakers) is a success story — they amended their constitution four times to accommodate different communities.",
+              "Power sharing is desirable for two reasons: (1) Prudential  - it reduces conflict between social groups, ensures political stability, and prevents tyranny of the majority (as seen in Sri Lanka's ethnic conflict between Sinhalese and Tamils). (2) Moral  - it is the very spirit of democracy; citizens have a right to be consulted in governance. Belgium's power -sharing model (between Dutch, French, and German speakers) is a success story  - they amended their constitution four times to accommodate different communities.",
           },
           {
             title: "Forms of Power Sharing",
             order: 2,
             summary:
-              "Power can be shared in four ways: (1) Horizontal — among Legislature, Executive, and Judiciary (separation of powers, checks and balances). (2) Vertical — between Central and State/Local governments (federalism). (3) Among social groups — community government in Belgium, reserved constituencies in India. (4) Among political parties, pressure groups, and movements — coalition governments, trade unions, etc. Modern democracies use a combination of all these forms.",
+              "Power can be shared in four ways: (1) Horizontal  - among Legislature, Executive, and Judiciary (separation of powers, checks and balances). (2) Vertical  - between Central and State/Local governments (federalism). (3) Among social groups  - community government in Belgium, reserved constituencies in India. (4) Among political parties, pressure groups, and movements  - coalition governments, trade unions, etc. Modern democracies use a combination of all these forms.",
           },
         ],
       },
@@ -523,7 +523,7 @@ async function main() {
             optionC: "Power shared among different social groups",
             optionD: "Power shared among political parties",
             correctAnswer: "B",
-            explanation: "Horizontal power sharing is among the Legislature, Executive, and Judiciary — different organs at the same level of government.",
+            explanation: "Horizontal power sharing is among the Legislature, Executive, and Judiciary  - different organs at the same level of government.",
           },
           {
             question: "The ethnic conflict in Sri Lanka was between:",
@@ -541,7 +541,7 @@ async function main() {
             optionC: "Citizens have a right to be consulted",
             optionD: "It is morally correct",
             correctAnswer: "B",
-            explanation: "The prudential reason is practical — power sharing reduces social conflict and ensures political stability, preventing tyranny of the majority.",
+            explanation: "The prudential reason is practical  - power sharing reduces social conflict and ensures political stability, preventing tyranny of the majority.",
           },
           {
             question: "Community government in Belgium is an example of power sharing among:",
@@ -550,7 +550,7 @@ async function main() {
             optionC: "Different social groups",
             optionD: "Different political parties",
             correctAnswer: "C",
-            explanation: "Belgium's community government is elected by people belonging to one language community (Dutch, French, or German) — an example of power sharing among social groups.",
+            explanation: "Belgium's community government is elected by people belonging to one language community (Dutch, French, or German)  - an example of power sharing among social groups.",
           },
         ],
       },
@@ -605,7 +605,7 @@ async function main() {
             optionC: "40%",
             optionD: "50%",
             correctAnswer: "B",
-            explanation: "At least one-third (33%) of all positions in local government bodies are reserved for women as per the 73rd and 74th Amendments.",
+            explanation: "At least one -third (33%) of all positions in local government bodies are reserved for women as per the 73rd and 74th Amendments.",
           },
           {
             question: "Which is the lowest tier of the Panchayati Raj system?",
@@ -614,7 +614,7 @@ async function main() {
             optionC: "Gram Panchayat",
             optionD: "Block Committee",
             correctAnswer: "C",
-            explanation: "Gram Panchayat is the lowest tier of the three-tier Panchayati Raj system, followed by Panchayat Samiti and Zila Parishad.",
+            explanation: "Gram Panchayat is the lowest tier of the three -tier Panchayati Raj system, followed by Panchayat Samiti and Zila Parishad.",
           },
           {
             question: "USA is an example of which type of federation?",
@@ -641,13 +641,13 @@ async function main() {
             title: "Role and Types of Political Parties",
             order: 1,
             summary:
-              "A political party is a group of people who come together to contest elections and hold power. They have three components: leaders, active members, and followers. Functions include contesting elections, forming government policies, playing opposition role, shaping public opinion, and providing access to government welfare. India has a multi-party system with National Parties (recognised in 4+ states — BJP, INC, BSP, CPI-M, NCP) and State/Regional Parties (recognised in one/two states).",
+              "A political party is a group of people who come together to contest elections and hold power. They have three components: leaders, active members, and followers. Functions include contesting elections, forming government policies, playing opposition role, shaping public opinion, and providing access to government welfare. India has a multi -party system with National Parties (recognised in 4+ states  - BJP, INC, BSP, CPI -M, NCP) and State/Regional Parties (recognised in one/two states).",
           },
           {
             title: "Challenges to Political Parties",
             order: 2,
             summary:
-              "Major challenges facing political parties include: (1) Lack of internal democracy — ordinary members have no say, leaders make all decisions. (2) Dynastic succession — power is passed within families. (3) Growing role of money and muscle power in elections. (4) Parties do not offer meaningful choice — their policies are often similar. Reforms suggested: laws to regulate internal affairs, mandatory financial transparency, state funding of elections, anti-defection laws, and independent candidate options.",
+              "Major challenges facing political parties include: (1) Lack of internal democracy  - ordinary members have no say, leaders make all decisions. (2) Dynastic succession  - power is passed within families. (3) Growing role of money and muscle power in elections. (4) Parties do not offer meaningful choice  - their policies are often similar. Reforms suggested: laws to regulate internal affairs, mandatory financial transparency, state funding of elections, anti -defection laws, and independent candidate options.",
           },
         ],
       },
@@ -678,16 +678,16 @@ async function main() {
             optionC: "Too much transparency",
             optionD: "Excessive voter turnout",
             correctAnswer: "B",
-            explanation: "Dynastic succession — where power is concentrated in one family within a party — is a major challenge facing political parties in India.",
+            explanation: "Dynastic succession  - where power is concentrated in one family within a party  - is a major challenge facing political parties in India.",
           },
           {
             question: "India has which type of party system?",
-            optionA: "One-party system",
-            optionB: "Two-party system",
-            optionC: "Multi-party system",
-            optionD: "No-party system",
+            optionA: "One -party system",
+            optionB: "Two -party system",
+            optionC: "Multi -party system",
+            optionD: "No -party system",
             correctAnswer: "C",
-            explanation: "India has a multi-party system with several national and regional parties competing for power at different levels.",
+            explanation: "India has a multi -party system with several national and regional parties competing for power at different levels.",
           },
           {
             question: "The three components of a political party are:",
@@ -721,16 +721,16 @@ async function main() {
       topics: {
         create: [
           {
-            title: "What Development Promises — Different People, Different Goals",
+            title: "What Development Promises  - Different People, Different Goals",
             order: 1,
             summary:
-              "Development means different things to different people. A landless labourer wants higher wages, a farmer wants fair crop prices, an industrialist wants fewer regulations. Development involves thinking about the best mix of goals — not just income, but quality of life. Countries are compared using Per Capita Income (total income divided by population). The World Bank uses this to classify countries: Rich/Developed (per capita income ≥ US$12,056) and Low-income countries.",
+              "Development means different things to different people. A landless labourer wants higher wages, a farmer wants fair crop prices, an industrialist wants fewer regulations. Development involves thinking about the best mix of goals  - not just income, but quality of life. Countries are compared using Per Capita Income (total income divided by population). The World Bank uses this to classify countries: Rich/Developed (per capita income ≥ US$12,056) and Low -income countries.",
           },
           {
             title: "Human Development Index",
             order: 2,
             summary:
-              "Income alone cannot measure development. The UNDP's Human Development Index (HDI) compares countries based on three factors: (1) Health — measured by life expectancy at birth, (2) Education — mean years of schooling and expected years of schooling, (3) Standard of living — Gross National Income per capita. India ranked 132 out of 191 countries in the 2021-22 HDI report. Sri Lanka has better HDI than India despite lower income, because of superior healthcare and education indicators.",
+              "Income alone cannot measure development. The UNDP's Human Development Index (HDI) compares countries based on three factors: (1) Health  - measured by life expectancy at birth, (2) Education  - mean years of schooling and expected years of schooling, (3) Standard of living  - Gross National Income per capita. India ranked 132 out of 191 countries in the 2021 -22 HDI report. Sri Lanka has better HDI than India despite lower income, because of superior healthcare and education indicators.",
           },
         ],
       },
@@ -797,7 +797,7 @@ async function main() {
             title: "Three Sectors of the Economy",
             order: 1,
             summary:
-              "Economic activities are classified into three sectors: Primary (agriculture, mining, fishing — directly using natural resources), Secondary (manufacturing, construction — processing raw materials into finished goods), and Tertiary/Service (transport, banking, IT, education — providing services). In India, the tertiary sector has become the largest sector by GDP (over 50%), but the primary sector still employs the most people — this shows 'disguised unemployment' where more people work in agriculture than needed.",
+              "Economic activities are classified into three sectors: Primary (agriculture, mining, fishing  - directly using natural resources), Secondary (manufacturing, construction  - processing raw materials into finished goods), and Tertiary/Service (transport, banking, IT, education  - providing services). In India, the tertiary sector has become the largest sector by GDP (over 50%), but the primary sector still employs the most people  - this shows 'disguised unemployment' where more people work in agriculture than needed.",
           },
           {
             title: "Organised and Unorganised Sectors",
@@ -870,13 +870,13 @@ async function main() {
             title: "Modern Forms of Money and Banking",
             order: 1,
             summary:
-              "Modern money includes currency (paper notes and coins) issued by the Reserve Bank of India (RBI) on behalf of the central government. No other individual or organisation can issue currency — this is called 'legal tender.' Banks accept deposits and pay interest, then lend this money to borrowers at a higher interest rate — the difference is their profit. Banks keep only about 15% of deposits as cash (Cash Reserve Ratio) and lend out the rest. This process of lending creates credit in the economy.",
+              "Modern money includes currency (paper notes and coins) issued by the Reserve Bank of India (RBI) on behalf of the central government. No other individual or organisation can issue currency  - this is called 'legal tender.' Banks accept deposits and pay interest, then lend this money to borrowers at a higher interest rate  - the difference is their profit. Banks keep only about 15% of deposits as cash (Cash Reserve Ratio) and lend out the rest. This process of lending creates credit in the economy.",
           },
           {
             title: "Credit and Its Impact",
             order: 2,
             summary:
-              "Credit (loan) is an agreement where a lender supplies money and the borrower repays with interest. Every loan has: collateral (security like land, property), interest rate, documentation, and mode of repayment. Credit has two faces: it can help people grow (a trader expanding business) or trap them in debt (a farmer whose crop fails). Formal sector loans come from banks and cooperatives (regulated by RBI). Informal sector loans come from moneylenders, traders, and relatives (often with very high interest rates — leading to debt traps).",
+              "Credit (loan) is an agreement where a lender supplies money and the borrower repays with interest. Every loan has: collateral (security like land, property), interest rate, documentation, and mode of repayment. Credit has two faces: it can help people grow (a trader expanding business) or trap them in debt (a farmer whose crop fails). Formal sector loans come from banks and cooperatives (regulated by RBI). Informal sector loans come from moneylenders, traders, and relatives (often with very high interest rates  - leading to debt traps).",
           },
         ],
       },
@@ -907,7 +907,7 @@ async function main() {
             optionC: "Banks and cooperatives",
             optionD: "Landlords and employers",
             correctAnswer: "C",
-            explanation: "Formal sources of credit — banks and cooperatives — are supervised and regulated by the RBI, ensuring fair interest rates and practices.",
+            explanation: "Formal sources of credit  - banks and cooperatives  - are supervised and regulated by the RBI, ensuring fair interest rates and practices.",
           },
           {
             question: "What percentage of deposits do banks typically keep as cash reserves?",
@@ -916,7 +916,7 @@ async function main() {
             optionC: "25%",
             optionD: "50%",
             correctAnswer: "B",
-            explanation: "Banks keep only about 15% of their deposits as cash (Cash Reserve Ratio) to meet day-to-day withdrawals, and lend out the remaining 85%.",
+            explanation: "Banks keep only about 15% of their deposits as cash (Cash Reserve Ratio) to meet day -to -day withdrawals, and lend out the remaining 85%.",
           },
           {
             question: "The RBI supervises which type of loans?",
@@ -933,7 +933,7 @@ async function main() {
   });
 
   // ═══════════════════════════════════════════
-  //  CLASS 10 — SCIENCE
+  //  CLASS 10  - SCIENCE
   // ═══════════════════════════════════════════
 
   const science = await prisma.subject.create({
@@ -956,7 +956,7 @@ async function main() {
             title: "Types of Chemical Reactions",
             order: 1,
             summary:
-              "Chemical reactions involve the transformation of reactants into products. Key types: Combination (two or more substances combine — 2Mg + O₂ → 2MgO), Decomposition (one substance breaks down — 2FeSO₄ → Fe₂O₃ + SO₂ + SO₃), Displacement (a more reactive element replaces a less reactive one — Fe + CuSO₄ → FeSO₄ + Cu), Double Displacement (exchange of ions — NaOH + HCl → NaCl + H₂O), and Redox (oxidation and reduction occur simultaneously).",
+              "Chemical reactions involve the transformation of reactants into products. Key types: Combination (two or more substances combine  - 2Mg + O₂ → 2MgO), Decomposition (one substance breaks down  - 2FeSO₄ → Fe₂O₃ + SO₂ + SO₃), Displacement (a more reactive element replaces a less reactive one  - Fe + CuSO₄ → FeSO₄ + Cu), Double Displacement (exchange of ions  - NaOH + HCl → NaCl + H₂O), and Redox (oxidation and reduction occur simultaneously).",
           },
           {
             title: "Balancing Chemical Equations",
@@ -984,7 +984,7 @@ async function main() {
             optionC: "Law of Multiple Proportions",
             optionD: "Avogadro's Law",
             correctAnswer: "B",
-            explanation: "A balanced equation follows the Law of Conservation of Mass — matter is neither created nor destroyed, so atoms must be equal on both sides.",
+            explanation: "A balanced equation follows the Law of Conservation of Mass  - matter is neither created nor destroyed, so atoms must be equal on both sides.",
           },
           {
             question: "Oxidation involves:",
@@ -1002,7 +1002,7 @@ async function main() {
             optionC: "Displacement reaction",
             optionD: "Double displacement reaction",
             correctAnswer: "C",
-            explanation: "Iron (more reactive) displaces copper (less reactive) from copper sulphate solution — this is a displacement reaction.",
+            explanation: "Iron (more reactive) displaces copper (less reactive) from copper sulphate solution  - this is a displacement reaction.",
           },
           {
             question: "Rancidity can be prevented by:",
@@ -1029,13 +1029,13 @@ async function main() {
             title: "Nutrition in Organisms",
             order: 1,
             summary:
-              "Nutrition is the process of obtaining food for energy, growth, and repair. Autotrophic nutrition (plants) — photosynthesis uses CO₂ + H₂O + sunlight → C₆H₁₂O₆ + O₂ in chloroplasts. Heterotrophic nutrition (animals, fungi) — organisms depend on other organisms. In humans, digestion starts in the mouth (salivary amylase breaks starch), continues in the stomach (pepsin breaks proteins in HCl), and is completed in the small intestine where bile, pancreatic juice, and intestinal juice act. Absorption occurs through villi in the small intestine.",
+              "Nutrition is the process of obtaining food for energy, growth, and repair. Autotrophic nutrition (plants)  - photosynthesis uses CO₂ + H₂O + sunlight → C₆H₁₂O₆ + O₂ in chloroplasts. Heterotrophic nutrition (animals, fungi)  - organisms depend on other organisms. In humans, digestion starts in the mouth (salivary amylase breaks starch), continues in the stomach (pepsin breaks proteins in HCl), and is completed in the small intestine where bile, pancreatic juice, and intestinal juice act. Absorption occurs through villi in the small intestine.",
           },
           {
             title: "Respiration and Transportation",
             order: 2,
             summary:
-              "Respiration breaks down glucose to release energy. Aerobic respiration (with O₂): C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + energy (38 ATP). Anaerobic respiration (without O₂): produces ethanol + CO₂ in yeast, or lactic acid in muscles. In humans, the heart is a four-chambered pump. Oxygenated blood flows through arteries, deoxygenated through veins. Blood carries oxygen (via haemoglobin in RBCs), nutrients, hormones, and waste products. Plants transport water through xylem and food through phloem.",
+              "Respiration breaks down glucose to release energy. Aerobic respiration (with O₂): C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + energy (38 ATP). Anaerobic respiration (without O₂): produces ethanol + CO₂ in yeast, or lactic acid in muscles. In humans, the heart is a four -chambered pump. Oxygenated blood flows through arteries, deoxygenated through veins. Blood carries oxygen (via haemoglobin in RBCs), nutrients, hormones, and waste products. Plants transport water through xylem and food through phloem.",
           },
         ],
       },
@@ -1084,7 +1084,7 @@ async function main() {
             optionC: "Small intestine",
             optionD: "Oesophagus",
             correctAnswer: "C",
-            explanation: "Villi are finger-like projections in the inner lining of the small intestine that increase surface area for efficient absorption of digested food.",
+            explanation: "Villi are finger -like projections in the inner lining of the small intestine that increase surface area for efficient absorption of digested food.",
           },
         ],
       },
@@ -1102,13 +1102,13 @@ async function main() {
             title: "Ohm's Law and Resistance",
             order: 1,
             summary:
-              "Electric current is the flow of electric charge (electrons). Potential difference (voltage) drives the current through a conductor. Ohm's Law: V = IR (Voltage = Current × Resistance). Resistance (R) depends on length (longer = more resistance), cross-sectional area (thicker = less resistance), material, and temperature. Resistivity (ρ) is a material property — metals have low resistivity (good conductors), rubber/glass have high resistivity (insulators). Resistors in series: R = R₁ + R₂. In parallel: 1/R = 1/R₁ + 1/R₂.",
+              "Electric current is the flow of electric charge (electrons). Potential difference (voltage) drives the current through a conductor. Ohm's Law: V = IR (Voltage = Current × Resistance). Resistance (R) depends on length (longer = more resistance), cross -sectional area (thicker = less resistance), material, and temperature. Resistivity (ρ) is a material property  - metals have low resistivity (good conductors), rubber/glass have high resistivity (insulators). Resistors in series: R = R₁ + R₂. In parallel: 1/R = 1/R₁ + 1/R₂.",
           },
           {
             title: "Electric Power and Heating Effect",
             order: 2,
             summary:
-              "Electric power is the rate of consuming energy. P = VI = I²R = V²/R. Unit: Watt (W). 1 kilowatt = 1000 W. Energy consumed is measured in kilowatt-hours (kWh) — 1 kWh = 1 'unit' of electricity. Heating effect of current: when current flows through a resistor, electrical energy is converted to heat (Joule's Law: H = I²Rt). Applications include electric heaters, toasters, irons, and fuses. A fuse wire melts and breaks the circuit when current exceeds the safe limit.",
+              "Electric power is the rate of consuming energy. P = VI = I²R = V²/R. Unit: Watt (W). 1 kilowatt = 1000 W. Energy consumed is measured in kilowatt -hours (kWh)  - 1 kWh = 1 'unit' of electricity. Heating effect of current: when current flows through a resistor, electrical energy is converted to heat (Joule's Law: H = I²Rt). Applications include electric heaters, toasters, irons, and fuses. A fuse wire melts and breaks the circuit when current exceeds the safe limit.",
           },
         ],
       },
@@ -1142,13 +1142,13 @@ async function main() {
             explanation: "For parallel resistors: 1/R = 1/4 + 1/4 = 2/4 = 1/2, so R = 2Ω. Parallel connection always gives less resistance than the smallest individual resistor.",
           },
           {
-            question: "1 kilowatt-hour (kWh) is a unit of:",
+            question: "1 kilowatt -hour (kWh) is a unit of:",
             optionA: "Power",
             optionB: "Current",
             optionC: "Energy",
             optionD: "Resistance",
             correctAnswer: "C",
-            explanation: "1 kWh (kilowatt-hour) is the commercial unit of electrical energy. It equals the energy consumed by a 1000W device running for 1 hour.",
+            explanation: "1 kWh (kilowatt -hour) is the commercial unit of electrical energy. It equals the energy consumed by a 1000W device running for 1 hour.",
           },
           {
             question: "A fuse wire should have:",
@@ -1165,7 +1165,7 @@ async function main() {
   });
 
   // ═══════════════════════════════════════════
-  //  CLASS 10 — MATHEMATICS
+  //  CLASS 10  - MATHEMATICS
   // ═══════════════════════════════════════════
 
   const math = await prisma.subject.create({
@@ -1194,7 +1194,7 @@ async function main() {
             title: "Irrational Numbers and Decimal Expansions",
             order: 2,
             summary:
-              "An irrational number cannot be expressed as p/q where p, q are integers and q ≠ 0. Examples: √2, √3, √5, π. Proof that √2 is irrational uses contradiction: assume √2 = a/b (in lowest terms), then 2b² = a², so a is even, let a = 2c, then b is also even — contradicting that a/b is in lowest terms. Decimal expansions: rational numbers have terminating or repeating decimals. A fraction p/q has terminating decimal if q = 2ⁿ × 5ᵐ (only prime factors 2 and 5).",
+              "An irrational number cannot be expressed as p/q where p, q are integers and q ≠ 0. Examples: √2, √3, √5, π. Proof that √2 is irrational uses contradiction: assume √2 = a/b (in lowest terms), then 2b² = a², so a is even, let a = 2c, then b is also even  - contradicting that a/b is in lowest terms. Decimal expansions: rational numbers have terminating or repeating decimals. A fraction p/q has terminating decimal if q = 2ⁿ × 5ᵐ (only prime factors 2 and 5).",
           },
         ],
       },
@@ -1221,8 +1221,8 @@ async function main() {
           {
             question: "The decimal expansion of 13/3125 is:",
             optionA: "Terminating",
-            optionB: "Non-terminating repeating",
-            optionC: "Non-terminating non-repeating",
+            optionB: "Non -terminating repeating",
+            optionC: "Non -terminating non -repeating",
             optionD: "Cannot be determined",
             correctAnswer: "A",
             explanation: "3125 = 5⁵. Since the denominator has only 5 as a prime factor, the decimal expansion is terminating. (13/3125 = 0.00416)",
@@ -1261,20 +1261,20 @@ async function main() {
             title: "Solving Quadratic Equations",
             order: 1,
             summary:
-              "A quadratic equation is of the form ax² + bx + c = 0 (a ≠ 0). Three methods to solve: (1) Factorisation — split the middle term, e.g., x² + 5x + 6 = (x+2)(x+3) = 0 → x = -2 or -3. (2) Completing the square — rewrite as (x + b/2a)² = (b²-4ac)/4a². (3) Quadratic formula: x = (-b ± √(b²-4ac)) / 2a. The expression b² - 4ac is called the discriminant (D). If D > 0: two distinct real roots. D = 0: two equal real roots. D < 0: no real roots.",
+              "A quadratic equation is of the form ax² + bx + c = 0 (a ≠ 0). Three methods to solve: (1) Factorisation  - split the middle term, e.g., x² + 5x + 6 = (x+2)(x+3) = 0 → x =  -2 or  -3. (2) Completing the square  - rewrite as (x + b/2a)² = (b² -4ac)/4a². (3) Quadratic formula: x = ( -b ± √(b² -4ac)) / 2a. The expression b²  - 4ac is called the discriminant (D). If D > 0: two distinct real roots. D = 0: two equal real roots. D < 0: no real roots.",
           },
         ],
       },
       mcqs: {
         create: [
           {
-            question: "The discriminant of 2x² - 4x + 3 = 0 is:",
+            question: "The discriminant of 2x²  - 4x + 3 = 0 is:",
             optionA: "4",
-            optionB: "-8",
+            optionB: " -8",
             optionC: "8",
-            optionD: "-4",
+            optionD: " -4",
             correctAnswer: "B",
-            explanation: "D = b² - 4ac = (-4)² - 4(2)(3) = 16 - 24 = -8. Since D < 0, the equation has no real roots.",
+            explanation: "D = b²  - 4ac = ( -4)²  - 4(2)(3) = 16  - 24 =  -8. Since D < 0, the equation has no real roots.",
           },
           {
             question: "If the discriminant is zero, the quadratic equation has:",
@@ -1283,30 +1283,30 @@ async function main() {
             optionC: "Two equal real roots",
             optionD: "Imaginary roots",
             correctAnswer: "C",
-            explanation: "When D = 0, the quadratic formula gives x = -b/2a (single value), meaning the equation has two equal (repeated) real roots.",
+            explanation: "When D = 0, the quadratic formula gives x =  -b/2a (single value), meaning the equation has two equal (repeated) real roots.",
           },
           {
-            question: "The roots of x² - 5x + 6 = 0 are:",
+            question: "The roots of x²  - 5x + 6 = 0 are:",
             optionA: "2 and 3",
-            optionB: "-2 and -3",
+            optionB: " -2 and  -3",
             optionC: "1 and 6",
-            optionD: "-1 and -6",
+            optionD: " -1 and  -6",
             correctAnswer: "A",
-            explanation: "x² - 5x + 6 = (x-2)(x-3) = 0, so x = 2 or x = 3. We can verify: 2+3=5 (sum) and 2×3=6 (product).",
+            explanation: "x²  - 5x + 6 = (x -2)(x -3) = 0, so x = 2 or x = 3. We can verify: 2+3=5 (sum) and 2×3=6 (product).",
           },
           {
             question: "The quadratic formula is:",
-            optionA: "x = (-b ± √(b²+4ac)) / 2a",
-            optionB: "x = (-b ± √(b²-4ac)) / 2a",
-            optionC: "x = (b ± √(b²-4ac)) / 2a",
-            optionD: "x = (-b ± √(4ac-b²)) / 2a",
+            optionA: "x = ( -b ± √(b²+4ac)) / 2a",
+            optionB: "x = ( -b ± √(b² -4ac)) / 2a",
+            optionC: "x = (b ± √(b² -4ac)) / 2a",
+            optionD: "x = ( -b ± √(4ac -b²)) / 2a",
             correctAnswer: "B",
-            explanation: "The quadratic formula x = (-b ± √(b²-4ac)) / 2a gives the roots of any quadratic equation ax² + bx + c = 0.",
+            explanation: "The quadratic formula x = ( -b ± √(b² -4ac)) / 2a gives the roots of any quadratic equation ax² + bx + c = 0.",
           },
           {
             question: "Which is NOT a quadratic equation?",
-            optionA: "x² + 3x - 5 = 0",
-            optionB: "2x² - x = 0",
+            optionA: "x² + 3x  - 5 = 0",
+            optionB: "2x²  - x = 0",
             optionC: "x³ + x² = 1",
             optionD: "3x² + 1 = 0",
             correctAnswer: "C",
@@ -1328,7 +1328,7 @@ async function main() {
             title: "Mean, Median, and Mode of Grouped Data",
             order: 1,
             summary:
-              "For grouped data: Mean can be calculated by Direct method (Σfᵢxᵢ/Σfᵢ), Assumed Mean method, or Step Deviation method. Mode = l + [(f₁-f₀)/(2f₁-f₀-f₂)] × h, where l = lower limit of modal class, f₁ = frequency of modal class, f₀ and f₂ = frequencies of preceding and succeeding classes, h = class size. Median = l + [(n/2-cf)/f] × h, where cf = cumulative frequency of the class before the median class. The empirical relationship: 3 Median = Mode + 2 Mean.",
+              "For grouped data: Mean can be calculated by Direct method (Σfᵢxᵢ/Σfᵢ), Assumed Mean method, or Step Deviation method. Mode = l + [(f₁ -f₀)/(2f₁ -f₀ -f₂)] × h, where l = lower limit of modal class, f₁ = frequency of modal class, f₀ and f₂ = frequencies of preceding and succeeding classes, h = class size. Median = l + [(n/2 -cf)/f] × h, where cf = cumulative frequency of the class before the median class. The empirical relationship: 3 Median = Mode + 2 Mean.",
           },
         ],
       },
@@ -1336,12 +1336,12 @@ async function main() {
         create: [
           {
             question: "The empirical relationship between mean, median, and mode is:",
-            optionA: "Mode = 3 Median - 2 Mean",
-            optionB: "Mode = 2 Median - 3 Mean",
-            optionC: "Mean = 3 Median - 2 Mode",
-            optionD: "Median = 3 Mode - 2 Mean",
+            optionA: "Mode = 3 Median  - 2 Mean",
+            optionB: "Mode = 2 Median  - 3 Mean",
+            optionC: "Mean = 3 Median  - 2 Mode",
+            optionD: "Median = 3 Mode  - 2 Mean",
             correctAnswer: "A",
-            explanation: "The empirical relationship is: Mode = 3 Median - 2 Mean, or equivalently, 3 Median = Mode + 2 Mean.",
+            explanation: "The empirical relationship is: Mode = 3 Median  - 2 Mean, or equivalently, 3 Median = Mode + 2 Mean.",
           },
           {
             question: "The modal class is the class interval with:",
@@ -1350,7 +1350,7 @@ async function main() {
             optionC: "Middle frequency",
             optionD: "Cumulative frequency",
             correctAnswer: "B",
-            explanation: "The modal class is the class interval with the highest frequency — the mode lies within this class.",
+            explanation: "The modal class is the class interval with the highest frequency  - the mode lies within this class.",
           },
           {
             question: "For finding the median of grouped data, we need:",

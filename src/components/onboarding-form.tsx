@@ -22,7 +22,7 @@ const classes = [
   {
     value: 10,
     label: "Class 10",
-    description: "CBSE Class 10 — Board Exam",
+    description: "CBSE Class 10 - Board Exam",
     emoji: "📕",
     recommended: true,
   },

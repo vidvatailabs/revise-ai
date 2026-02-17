@@ -30,7 +30,7 @@ const features = [
     icon: Zap,
     title: "Quick Recaps & Summaries",
     description:
-      "Get concise, exam-focused summaries for any topic — perfect for last-minute revision.",
+      "Get concise, exam-focused summaries for any topic - perfect for last-minute revision.",
   },
   {
     icon: FileText,
@@ -99,7 +99,7 @@ export default function LandingPage() {
       <section className="relative z-[1] flex flex-col items-center justify-center text-center min-h-screen px-4 pt-32 pb-16">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm font-semibold mb-8 animate-fade-down">
           <Sparkles className="h-4 w-4" />
-          Now Live — Class 10 CBSE
+          Now Live - Class 10 CBSE
         </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl animate-fade-down [animation-delay:100ms]">
@@ -155,7 +155,7 @@ export default function LandingPage() {
           Why Students Love Revise AI
         </h2>
         <p className="text-center text-muted-foreground mb-12 text-lg">
-          Built for real exam prep — not just flashcards
+          Built for real exam prep, not just flashcards
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -181,7 +181,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="relative z-[1] border-t border-white/[0.06] py-8 text-center text-sm text-muted-foreground">
         <p>
-          © {new Date().getFullYear()} Revise AI — A product of{" "}
+          © {new Date().getFullYear()} Revise AI | A product of{" "}
           <a
             href="https://www.vidvatailabs.com/"
             target="_blank"

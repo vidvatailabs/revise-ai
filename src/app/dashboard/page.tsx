@@ -42,7 +42,7 @@ export default async function DashboardPage() {
     orderBy: { order: "asc" },
   });
 
-  // Fetch recent quiz attempts — filtered to current class only
+  // Fetch recent quiz attempts - filtered to current class only
   const subjectIds = subjects.map((s) => s.id);
   const recentAttempts = await prisma.quizAttempt.findMany({
     where: {
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
           </h1>
           <div className="flex items-center gap-2 text-muted-foreground">
             <GraduationCap className="h-4 w-4" />
-            <span>Class {user.selectedClass} — CBSE</span>
+            <span>Class {user.selectedClass} | CBSE</span>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
             </p>
             <div className="inline-flex items-center gap-2 text-sm text-indigo-400 bg-indigo-500/10 px-4 py-2 rounded-full">
               <Clock className="h-4 w-4" />
-              Check back soon — or try Class 10 which is live now!
+              Check back soon - or try Class 10 which is live now!
             </div>
           </div>
         ) : (

@@ -2,7 +2,7 @@ const CACHE_NAME = "revise-ai-v1";
 
 const PRECACHE_URLS = ["/dashboard"];
 
-// Install — precache essential resources
+// Install - precache essential resources
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
@@ -10,7 +10,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Activate — clean up old caches
+// Activate - clean up old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) =>
@@ -24,7 +24,7 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch — network-first strategy with cache fallback
+// Fetch - network-first strategy with cache fallback
 self.addEventListener("fetch", (event) => {
   // Skip non-GET requests
   if (event.request.method !== "GET") return;
