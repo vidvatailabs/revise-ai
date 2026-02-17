@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String        @id // Clerk user ID
+  email         String        @unique
+  selectedClass Int?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  quizAttempts  QuizAttempt[]
+}
+
+model Subject {
+  id       String    @id @default(cuid())
+  class    Int
+  title    String
+  icon     String    @default("📚")
+  order    Int       @default(0)
+  chapters Chapter[]
+
+  @@index([class])
+}
+
+model Chapter {
+  id           String        @id @default(cuid())
+  subjectId    String
+  subject      Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title        String
+  order        Int           @default(0)
+  topics       Topic[]
+  mcqs         MCQ[]
+  quizAttempts QuizAttempt[]
+
+  @@index([subjectId])
+}
+
+model Topic {
+  id        String  @id @default(cuid())
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  title     String
+  summary   String  @db.Text
+  order     Int     @default(0)
+
+  @@index([chapterId])
+}
+
+model MCQ {
+  id            String  @id @default(cuid())
+  chapterId     String
+  chapter       Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  question      String  @db.Text
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String  // "A", "B", "C", or "D"
+  explanation   String  @db.Text
+
+  @@index([chapterId])
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  score     Int
+  total     Int
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([chapterId])
+}

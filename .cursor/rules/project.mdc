@@ -1,0 +1,47 @@
+---
+alwaysApply: true
+---
+
+# Revise AI — Project Rules
+
+## Architecture
+- This is **Revise AI** — a product of **VidvatAI Labs** (vidvatailabs.com)
+- Hosted at `reviseai.vidvatailabs.com` via Vercel
+- Full-stack Next.js 14 (App Router) with TypeScript
+
+## Tech Stack
+- **Framework**: Next.js 14+ (App Router, `src/` directory)
+- **Language**: TypeScript (strict mode)
+- **UI**: Tailwind CSS + shadcn/ui (dark theme, indigo/purple accents)
+- **Auth**: Clerk (@clerk/nextjs v5)
+- **Database**: Neon PostgreSQL (serverless)
+- **ORM**: Prisma (schema in `prisma/schema.prisma`)
+- **Hosting**: Vercel
+- **PWA**: Service worker + manifest
+
+## Key Files
+- [src/app/layout.tsx](mdc:src/app/layout.tsx) — Root layout with ClerkProvider
+- [src/middleware.ts](mdc:src/middleware.ts) — Clerk auth middleware
+- [src/lib/prisma.ts](mdc:src/lib/prisma.ts) — Prisma client singleton
+- [src/lib/user.ts](mdc:src/lib/user.ts) — User sync utility (getOrCreateUser)
+- [prisma/schema.prisma](mdc:prisma/schema.prisma) — Database schema
+- [prisma/seed.ts](mdc:prisma/seed.ts) — Seed data for Class 10
+
+## Conventions
+- Use `@/` import alias (maps to `./src/`)
+- Server Components by default; add `"use client"` only when needed
+- API routes in `src/app/api/`
+- UI components in `src/components/ui/` (shadcn pattern)
+- App components in `src/components/`
+- Always use `auth()` from `@clerk/nextjs/server` for server-side auth
+- Dark theme only — CSS variables defined in `globals.css`
+- Mobile-first responsive design
+
+## Database
+- User IDs are Clerk user IDs (string)
+- Run `npx prisma db push` to sync schema
+- Run `npx prisma db seed` to seed data
+- Models: User, Subject, Chapter, Topic, MCQ, QuizAttempt
+
+## App Flow
+Landing (/) → Sign Up → Onboarding (class selection) → Dashboard → Subject → Chapter (read topics) → Quiz → Score saved
