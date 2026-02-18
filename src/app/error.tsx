@@ -17,7 +17,7 @@ export default function Error({
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 mb-6">
           <AlertTriangle className="h-8 w-8 text-red-400" />
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           Something went wrong
         </h1>
         <p className="text-muted-foreground mb-8">

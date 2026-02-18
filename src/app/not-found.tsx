@@ -10,8 +10,8 @@ export default function NotFound() {
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10 mb-6">
           <FileQuestion className="h-8 w-8 text-indigo-400" />
         </div>
-        <h1 className="text-4xl font-extrabold text-white mb-2">404</h1>
-        <h2 className="text-xl font-semibold text-white mb-2">
+        <h1 className="text-4xl font-extrabold text-foreground mb-2">404</h1>
+        <h2 className="text-xl font-semibold text-foreground mb-2">
           Page Not Found
         </h2>
         <p className="text-muted-foreground mb-8">

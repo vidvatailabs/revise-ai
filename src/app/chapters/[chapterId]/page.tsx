@@ -75,7 +75,7 @@ export default async function ChapterPage({
         {/* Back Link */}
         <Link
           href={backHref}
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           {backLabel}
@@ -97,7 +97,7 @@ export default async function ChapterPage({
               </Badge>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             {chapter.title}
           </h1>
           <p className="text-muted-foreground">
@@ -124,7 +124,7 @@ export default async function ChapterPage({
         {/* Previous Attempts - hide in revise mode */}
         {!isReviseMode && chapter.quizAttempts.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+            <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
               <Trophy className="h-5 w-5 text-indigo-400" />
               Your Quiz History
             </h2>
@@ -135,7 +135,7 @@ export default async function ChapterPage({
                   className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
                 >
                   <div className="text-sm">
-                    <span className="text-white font-medium">
+                    <span className="text-foreground font-medium">
                       Attempt {chapter.quizAttempts.length - i}
                     </span>
                     <span className="text-muted-foreground ml-2">

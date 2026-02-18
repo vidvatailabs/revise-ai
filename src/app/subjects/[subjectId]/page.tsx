@@ -50,7 +50,7 @@ export default async function SubjectPage({
         {/* Back Link */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -60,7 +60,7 @@ export default async function SubjectPage({
         <div className="flex items-center gap-4 mb-8">
           <span className="text-4xl">{subject.icon}</span>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               {subject.title}
             </h1>
             <p className="text-muted-foreground">
@@ -101,7 +101,7 @@ export default async function SubjectPage({
                 {/* Chapter Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors truncate">
+                    <h3 className="font-semibold text-foreground group-hover:text-indigo-300 transition-colors truncate">
                       {chapter.title}
                     </h3>
                     <div className="flex items-center gap-1.5 flex-shrink-0">

@@ -136,7 +136,7 @@ export function QuizClient({
               }`}
             />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-1">
+          <h2 className="text-2xl font-bold text-foreground mb-1">
             {isGreat
               ? "Excellent! 🎉"
               : isGood
@@ -187,7 +187,7 @@ export function QuizClient({
 
         {/* Detailed Results */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white">
+          <h3 className="text-lg font-semibold text-foreground">
             Detailed Results
           </h3>
           {result.results.map((item, index) => (
@@ -206,7 +206,7 @@ export function QuizClient({
                   <XCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
                 )}
                 <div>
-                  <p className="font-medium text-white">
+                  <p className="font-medium text-foreground">
                     Q{index + 1}. {item.question}
                   </p>
                 </div>
@@ -304,7 +304,7 @@ export function QuizClient({
               : "border-border bg-card"
           }`}
         >
-          <p className="font-medium text-white mb-4">
+          <p className="font-medium text-foreground mb-4">
             <span className="text-indigo-400 mr-2">Q{index + 1}.</span>
             {mcq.question}
           </p>
@@ -322,7 +322,7 @@ export function QuizClient({
                   className={`flex items-center space-x-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors ${
                     answers[mcq.id] === key
                       ? "border-indigo-500/40 bg-indigo-500/10"
-                      : "border-border hover:border-border/80 hover:bg-white/[0.02]"
+                      : "border-border hover:border-border/80 hover:bg-foreground/[0.02]"
                   }`}
                 >
                   <RadioGroupItem

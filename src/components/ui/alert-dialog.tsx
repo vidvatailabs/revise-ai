@@ -44,7 +44,7 @@ function AlertDialogTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
-      className={cn("text-lg font-semibold text-white", className)}
+      className={cn("text-lg font-semibold text-foreground", className)}
       {...props}
     />
   );

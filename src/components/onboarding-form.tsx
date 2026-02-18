@@ -71,7 +71,7 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
       {isChanging && (
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -82,7 +82,7 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
         <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 mb-4">
           <GraduationCap className="h-8 w-8 text-indigo-400" />
         </div>
-        <h1 className="text-3xl font-bold text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           {isChanging ? "Change Your Class" : "Welcome to Revise AI!"}
         </h1>
         <p className="text-muted-foreground text-lg">
@@ -121,7 +121,7 @@ export function OnboardingForm({ currentClass, isChanging }: OnboardingFormProps
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{cls.emoji}</span>
                 <div>
-                  <div className="font-semibold text-white text-lg">
+                  <div className="font-semibold text-foreground text-lg">
                     {cls.label}
                   </div>
                   <div className="text-sm text-muted-foreground">

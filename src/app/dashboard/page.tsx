@@ -94,7 +94,7 @@ export default async function DashboardPage() {
         {/* Welcome Section */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Welcome back! 👋
             </h1>
             <div className="flex items-center gap-2 text-muted-foreground">
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
               <BookOpen className="h-4 w-4" />
               Subjects
             </div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {subjects.length}
             </div>
           </div>
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
               <Flame className="h-4 w-4" />
               Progress
             </div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {completedChapters}/{totalChapters}
             </div>
           </div>
@@ -130,7 +130,7 @@ export default async function DashboardPage() {
               <Trophy className="h-4 w-4" />
               Quizzes Taken
             </div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {recentAttempts.length}
             </div>
           </div>
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Subjects Grid */}
-        <h2 className="text-xl font-semibold text-white mb-4">
+        <h2 className="text-xl font-semibold text-foreground mb-4">
           Your Subjects
         </h2>
 
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
             <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10 mb-4">
               <Rocket className="h-8 w-8 text-indigo-400" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-xl font-bold text-foreground mb-2">
               Coming Soon! 🚀
             </h3>
             <p className="text-muted-foreground max-w-md mx-auto mb-4">
@@ -189,7 +189,7 @@ export default async function DashboardPage() {
                     <div className="flex items-center gap-3">
                       <span className="text-3xl">{subject.icon}</span>
                       <div>
-                        <h3 className="font-semibold text-white text-lg group-hover:text-indigo-300 transition-colors">
+                        <h3 className="font-semibold text-foreground text-lg group-hover:text-indigo-300 transition-colors">
                           {subject.title}
                         </h3>
                         <p className="text-sm text-muted-foreground">
@@ -219,7 +219,7 @@ export default async function DashboardPage() {
         {/* Recent Activity */}
         {recentAttempts.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold text-white mb-4">
+            <h2 className="text-xl font-semibold text-foreground mb-4">
               Recent Activity
             </h2>
             <div className="space-y-3">
@@ -233,7 +233,7 @@ export default async function DashboardPage() {
                       <Trophy className="h-5 w-5 text-indigo-400" />
                     </div>
                     <div>
-                      <p className="font-medium text-white text-sm">
+                      <p className="font-medium text-foreground text-sm">
                         {attempt.chapter.title}
                       </p>
                       <p className="text-xs text-muted-foreground">

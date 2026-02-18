@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { BookOpen, GraduationCap } from "lucide-react";
+import { BookOpen, GraduationCap, Sun, Moon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 export function AppHeader() {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -29,6 +31,17 @@ export function AppHeader() {
           }}
         >
           <UserButton.MenuItems>
+            <UserButton.Action
+              label={theme === "dark" ? "Light Mode" : "Dark Mode"}
+              labelIcon={
+                theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )
+              }
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            />
             <UserButton.Action
               label="Change Class"
               labelIcon={<GraduationCap className="h-4 w-4" />}

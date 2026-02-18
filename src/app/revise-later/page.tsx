@@ -101,7 +101,7 @@ export default async function ReviseLaterPage() {
         {/* Back Link */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -113,7 +113,7 @@ export default async function ReviseLaterPage() {
             <BookmarkPlus className="h-6 w-6 text-amber-400" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               Revise Later
             </h1>
             <p className="text-muted-foreground">
@@ -128,7 +128,7 @@ export default async function ReviseLaterPage() {
             <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary mb-4">
               <BookOpen className="h-7 w-7 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               No topics bookmarked yet
             </h3>
             <p className="text-muted-foreground max-w-sm mx-auto">
@@ -150,7 +150,7 @@ export default async function ReviseLaterPage() {
                     <PlayCircle className="h-6 w-6 text-amber-400" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-lg group-hover:text-amber-300 transition-colors">
+                    <h3 className="font-bold text-foreground text-lg group-hover:text-amber-300 transition-colors">
                       Revise All Topics
                     </h3>
                     <p className="text-sm text-muted-foreground">
@@ -169,7 +169,7 @@ export default async function ReviseLaterPage() {
                 {/* Subject header */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-2xl">{subject.icon}</span>
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-foreground">
                     {subject.title}
                   </h2>
                 </div>
@@ -183,7 +183,7 @@ export default async function ReviseLaterPage() {
                     >
                       <div className="flex items-center justify-between mb-3">
                         <div className="min-w-0">
-                          <h3 className="font-semibold text-white group-hover:text-amber-300 transition-colors truncate">
+                          <h3 className="font-semibold text-foreground group-hover:text-amber-300 transition-colors truncate">
                             {chapter.title}
                           </h3>
                           <p className="text-xs text-muted-foreground mt-0.5">

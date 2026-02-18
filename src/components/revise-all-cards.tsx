@@ -286,7 +286,7 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 mb-4">
             <Sparkles className="h-7 w-7 text-amber-400" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">
+          <h2 className="text-xl font-bold text-foreground mb-2">
             Revision Complete! 🎉
           </h2>
           <p className="text-muted-foreground mb-6">
@@ -403,13 +403,13 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
                 <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 text-xs font-bold">
                   {currentIndex + 1}
                 </span>
-                <h3 className="font-semibold text-white text-lg leading-snug">
+                <h3 className="font-semibold text-foreground text-lg leading-snug">
                   {currentTopic.title}
                 </h3>
               </div>
               <button
                 onClick={handleShare}
-                className="p-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors flex-shrink-0"
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors flex-shrink-0"
                 title="Share"
               >
                 <Share2 className="h-4 w-4" />

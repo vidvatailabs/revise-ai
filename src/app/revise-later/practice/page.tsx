@@ -66,7 +66,7 @@ export default async function ReviseAllPracticePage() {
         {/* Back Link */}
         <Link
           href="/revise-later"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Revise Later
@@ -83,7 +83,7 @@ export default async function ReviseAllPracticePage() {
               Class {user.selectedClass}
             </Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Revise All Topics
           </h1>
           <p className="text-muted-foreground">

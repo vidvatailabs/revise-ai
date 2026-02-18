@@ -58,7 +58,7 @@ export default async function LandingPage() {
   if (userId) redirect("/dashboard");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background landing-dark">
       {/* Ambient glow */}
       <div className="bg-glow" />
 
