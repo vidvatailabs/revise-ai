@@ -60,6 +60,14 @@ export default async function DashboardPage() {
     take: 5,
   });
 
+  // Count total quiz attempts for the current class
+  const totalQuizzesTaken = await prisma.quizAttempt.count({
+    where: {
+      userId,
+      chapter: { subjectId: { in: subjectIds } },
+    },
+  });
+
   // Count "revise later" topics for the current class
   const reviseLaterCount = await prisma.topicStatus.count({
     where: {
@@ -131,7 +139,7 @@ export default async function DashboardPage() {
               Quizzes Taken
             </div>
             <div className="text-2xl font-bold text-foreground">
-              {recentAttempts.length}
+              {totalQuizzesTaken}
             </div>
           </div>
           <Link
