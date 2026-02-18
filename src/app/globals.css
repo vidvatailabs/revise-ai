@@ -152,6 +152,30 @@ html.transitioning *::after {
   --input: 220 13% 18%;
 }
 
+/* ── Light mode: darker amber/yellow text for better readability ── */
+/* amber-400 → amber-600 equivalent, yellow-400 → yellow-600 equivalent */
+html:not(.dark) .text-amber-400 { color: rgb(217 119 6) !important; }
+html:not(.dark) .text-amber-400\/70 { color: rgb(217 119 6 / 0.7) !important; }
+html:not(.dark) .text-amber-400\/60 { color: rgb(217 119 6 / 0.6) !important; }
+html:not(.dark) .text-amber-400\/50 { color: rgb(217 119 6 / 0.5) !important; }
+html:not(.dark) .text-amber-300 { color: rgb(245 158 11) !important; }
+html:not(.dark) .text-yellow-400 { color: rgb(202 138 4) !important; }
+
+/* Hover/group-hover/active variants */
+html:not(.dark) .hover\:text-amber-400:hover { color: rgb(217 119 6) !important; }
+html:not(.dark) .hover\:text-amber-300:hover { color: rgb(245 158 11) !important; }
+html:not(.dark) .group:hover .group-hover\:text-amber-300 { color: rgb(245 158 11) !important; }
+html:not(.dark) .group:hover .group-hover\:text-amber-400 { color: rgb(217 119 6) !important; }
+html:not(.dark) .active\:text-amber-400:active { color: rgb(217 119 6) !important; }
+
+/* Slightly stronger amber/yellow backgrounds for light mode */
+html:not(.dark) .bg-amber-500\/10 { background-color: rgb(245 158 11 / 0.1) !important; }
+html:not(.dark) .bg-amber-500\/5 { background-color: rgb(245 158 11 / 0.07) !important; }
+html:not(.dark) .border-amber-500\/20 { border-color: rgb(217 119 6 / 0.25) !important; }
+html:not(.dark) .border-amber-500\/30 { border-color: rgb(217 119 6 / 0.3) !important; }
+html:not(.dark) .bg-yellow-500\/10 { background-color: rgb(234 179 8 / 0.1) !important; }
+html:not(.dark) .border-yellow-500\/20 { border-color: rgb(202 138 4 / 0.25) !important; }
+
 /* Hide Clerk development mode badge (switch to production instance for proper fix) */
 .cl-internal-b3fm6y,
 div[data-mode="development"] {

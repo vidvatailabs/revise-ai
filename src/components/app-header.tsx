@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { BookOpen, GraduationCap, Sun, Moon } from "lucide-react";
@@ -8,7 +9,13 @@ import { useTheme } from "next-themes";
 
 export function AppHeader() {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch — only render theme button after mount
+  useEffect(() => setMounted(true), []);
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -22,33 +29,41 @@ export function AppHeader() {
           </div>
           Revise AI
         </Link>
-        <UserButton
-          afterSignOutUrl="/"
-          appearance={{
-            elements: {
-              avatarBox: "h-9 w-9",
-            },
-          }}
-        >
-          <UserButton.MenuItems>
-            <UserButton.Action
-              label={theme === "dark" ? "Light Mode" : "Dark Mode"}
-              labelIcon={
-                theme === "dark" ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )
-              }
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            />
-            <UserButton.Action
-              label="Change Class"
-              labelIcon={<GraduationCap className="h-4 w-4" />}
-              onClick={() => router.push("/onboarding?change=true")}
-            />
-          </UserButton.MenuItems>
-        </UserButton>
+
+        <div className="flex items-center gap-2">
+          {/* Theme toggle button */}
+          {mounted && (
+            <button
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card hover:bg-secondary transition-colors"
+              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {isDark ? (
+                <Sun className="h-4 w-4 text-amber-400" />
+              ) : (
+                <Moon className="h-4 w-4 text-indigo-500" />
+              )}
+            </button>
+          )}
+
+          {/* Profile menu */}
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "h-9 w-9",
+              },
+            }}
+          >
+            <UserButton.MenuItems>
+              <UserButton.Action
+                label="Change Class"
+                labelIcon={<GraduationCap className="h-4 w-4" />}
+                onClick={() => router.push("/onboarding?change=true")}
+              />
+            </UserButton.MenuItems>
+          </UserButton>
+        </div>
       </div>
     </header>
   );
