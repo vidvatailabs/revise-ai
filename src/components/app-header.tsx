@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { BookOpen, GraduationCap, Sun, Moon } from "lucide-react";
+import { BookOpen, GraduationCap, Sun, Moon, Crown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { ProModal } from "@/components/pro-modal";
 
 export function AppHeader() {
   const router = useRouter();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [proModalOpen, setProModalOpen] = useState(false);
 
   // Avoid hydration mismatch — only render theme button after mount
   useEffect(() => setMounted(true), []);
@@ -18,53 +20,69 @@ export function AppHeader() {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 max-w-7xl mx-auto">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-2 font-bold text-lg text-foreground"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-            <BookOpen className="h-4 w-4 text-white" />
-          </div>
-          Revise AI
-        </Link>
-
-        <div className="flex items-center gap-2">
-          {/* Theme toggle button */}
-          {mounted && (
-            <button
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card hover:bg-secondary transition-colors"
-              title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4 text-amber-400" />
-              ) : (
-                <Moon className="h-4 w-4 text-indigo-500" />
-              )}
-            </button>
-          )}
-
-          {/* Profile menu */}
-          <UserButton
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: "h-9 w-9",
-              },
-            }}
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl">
+        <div className="flex h-16 items-center justify-between px-4 sm:px-6 max-w-7xl mx-auto">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 font-bold text-lg text-foreground"
           >
-            <UserButton.MenuItems>
-              <UserButton.Action
-                label="Change Class"
-                labelIcon={<GraduationCap className="h-4 w-4" />}
-                onClick={() => router.push("/onboarding?change=true")}
-              />
-            </UserButton.MenuItems>
-          </UserButton>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+              <BookOpen className="h-4 w-4 text-white" />
+            </div>
+            Revise AI
+          </Link>
+
+          <div className="flex items-center gap-2">
+            {/* Pro upgrade button */}
+            <button
+              onClick={() => setProModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 hover:from-amber-500/20 hover:to-orange-500/20 hover:border-amber-500/30 transition-all group"
+            >
+              <Crown className="h-3.5 w-3.5 text-amber-500" />
+              <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-300">
+                Pro
+              </span>
+            </button>
+
+            {/* Theme toggle button */}
+            {mounted && (
+              <button
+                onClick={() => setTheme(isDark ? "light" : "dark")}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card hover:bg-secondary transition-colors"
+                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                {isDark ? (
+                  <Sun className="h-4 w-4 text-amber-400" />
+                ) : (
+                  <Moon className="h-4 w-4 text-indigo-500" />
+                )}
+              </button>
+            )}
+
+            {/* Profile menu */}
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  avatarBox: "h-9 w-9",
+                },
+              }}
+            >
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Change Class"
+                  labelIcon={<GraduationCap className="h-4 w-4" />}
+                  onClick={() => router.push("/onboarding?change=true")}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Pro Modal */}
+      <ProModal open={proModalOpen} onOpenChange={setProModalOpen} />
+    </>
   );
 }
