@@ -48,8 +48,8 @@ export function ProModal({ open, onOpenChange }: ProModalProps) {
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div className="relative z-50 w-full max-w-md max-h-[85vh] sm:max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-border bg-card shadow-2xl">
+      <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6">
+        <div className="relative z-50 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl">
           {/* Close button */}
           <button
             onClick={() => onOpenChange(false)}
