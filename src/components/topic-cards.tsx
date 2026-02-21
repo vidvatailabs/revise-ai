@@ -82,8 +82,8 @@ export function TopicCards({
     const topicOrder = topics[currentIndex]?.order;
     if (topicOrder === undefined) return;
 
-    // Skip if we already saved this or an earlier position
-    if (topicOrder <= lastSavedOrderRef.current) return;
+    // Skip if we already saved this exact position
+    if (topicOrder === lastSavedOrderRef.current) return;
 
     lastSavedOrderRef.current = topicOrder;
 

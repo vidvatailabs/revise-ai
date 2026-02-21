@@ -19,16 +19,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Upsert — only update if the new position is further than what's saved
-    const existing = await prisma.chapterProgress.findUnique({
-      where: { userId_chapterId: { userId, chapterId } },
-    });
-
-    if (existing && existing.lastViewedTopicOrder >= lastViewedTopicOrder) {
-      // User is revisiting an earlier topic — don't overwrite their furthest point
-      return NextResponse.json({ success: true, progress: existing });
-    }
-
+    // Always save the current position — user may go forward or backward
     const progress = await prisma.chapterProgress.upsert({
       where: { userId_chapterId: { userId, chapterId } },
       update: { lastViewedTopicOrder },
