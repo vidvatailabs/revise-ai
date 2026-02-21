@@ -115,7 +115,7 @@ export default async function DashboardPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          <div className="rounded-xl border border-border bg-card p-4">
+          <a href="#subjects" className="rounded-xl border border-border bg-card p-4 hover:border-indigo-500/30 transition-all cursor-pointer">
             <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
               <BookOpen className="h-4 w-4" />
               Subjects
@@ -123,8 +123,8 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-foreground">
               {subjects.length}
             </div>
-          </div>
-          <div className="rounded-xl border border-border bg-card p-4">
+          </a>
+          <a href="#recent-activity" className="rounded-xl border border-border bg-card p-4 hover:border-indigo-500/30 transition-all cursor-pointer">
             <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
               <Flame className="h-4 w-4" />
               Progress
@@ -132,8 +132,8 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-foreground">
               {completedChapters}/{totalChapters}
             </div>
-          </div>
-          <div className="rounded-xl border border-border bg-card p-4">
+          </a>
+          <a href="#recent-activity" className="rounded-xl border border-border bg-card p-4 hover:border-indigo-500/30 transition-all cursor-pointer">
             <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
               <Trophy className="h-4 w-4" />
               Quizzes Taken
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
             <div className="text-2xl font-bold text-foreground">
               {totalQuizzesTaken}
             </div>
-          </div>
+          </a>
           <Link
             href="/revise-later"
             className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 hover:bg-amber-500/10 transition-all group"
@@ -157,7 +157,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Subjects Grid */}
-        <h2 className="text-xl font-semibold text-foreground mb-4">
+        <h2 id="subjects" className="text-xl font-semibold text-foreground mb-4 scroll-mt-24">
           Your Subjects
         </h2>
 
@@ -227,7 +227,7 @@ export default async function DashboardPage() {
         {/* Recent Activity */}
         {recentAttempts.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold text-foreground mb-4">
+            <h2 id="recent-activity" className="text-xl font-semibold text-foreground mb-4 scroll-mt-24">
               Recent Activity
             </h2>
             <div className="space-y-3">
