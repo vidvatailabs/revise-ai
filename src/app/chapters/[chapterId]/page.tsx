@@ -76,8 +76,7 @@ export default async function ChapterPage({
     // Find the index of the topic with the saved order
     const savedIndex = topicsToShow.findIndex((t) => t.order === savedOrder);
     if (savedIndex !== -1) {
-      // If user already viewed all topics, start from beginning (re-review)
-      resumeIndex = savedIndex < topicsToShow.length - 1 ? savedIndex + 1 : 0;
+      resumeIndex = savedIndex;
     }
   }
 
