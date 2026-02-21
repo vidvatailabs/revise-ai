@@ -47,7 +47,6 @@ export function TopicCards({
   reviseMode = false,
   resumeIndex = 0,
 }: TopicCardsProps) {
-  const [currentIndex, setCurrentIndex] = useState(resumeIndex);
   const [statuses, setStatuses] = useState<Record<string, string | null>>(
     () => {
       const initial: Record<string, string | null> = {};
@@ -75,59 +74,49 @@ export function TopicCards({
   const swipeAreaRef = useRef<HTMLDivElement>(null);
   const currentIndexRef = useRef(resumeIndex);
 
+  // On mount: check localStorage for a more recent position than server's resumeIndex
+  const [initialIndex] = useState(() => {
+    if (reviseMode) return resumeIndex;
+    try {
+      const saved = localStorage.getItem(`chapter-progress-${chapterId}`);
+      if (saved) {
+        const savedIndex = parseInt(saved, 10);
+        if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < topics.length) {
+          return savedIndex;
+        }
+      }
+    } catch {}
+    return resumeIndex;
+  });
+
+  // Override currentIndex with localStorage value on first render
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
   // Keep ref in sync so unmount/unload can read latest value
   useEffect(() => {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
 
-  // Helper: save progress via sendBeacon (survives page navigation)
-  const saveProgressBeacon = useCallback(
-    (topicOrder: number) => {
-      navigator.sendBeacon(
-        "/api/chapters/progress",
-        new Blob(
-          [JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder })],
-          { type: "application/json" }
-        )
-      );
-    },
-    [chapterId]
-  );
-
-  // Save progress on every card change (instant, fire-and-forget)
+  // Save progress on every card change
   useEffect(() => {
     if (reviseMode) return;
 
     const topicOrder = topics[currentIndex]?.order;
     if (topicOrder === undefined) return;
 
-    // Use sendBeacon — lightweight, non-blocking, survives navigation
-    saveProgressBeacon(topicOrder);
-  }, [currentIndex, topics, reviseMode, saveProgressBeacon]);
+    // Save to localStorage instantly (for same-device resume, no network needed)
+    try {
+      localStorage.setItem(`chapter-progress-${chapterId}`, String(currentIndex));
+    } catch {}
 
-  // Safety net: save on component unmount (client-side navigation)
-  // and on tab close / hard refresh (beforeunload)
-  useEffect(() => {
-    if (reviseMode) return;
-
-    const handleBeforeUnload = () => {
-      const topicOrder = topics[currentIndexRef.current]?.order;
-      if (topicOrder !== undefined) {
-        saveProgressBeacon(topicOrder);
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      // On unmount (Next.js client navigation) — save current position
-      const topicOrder = topics[currentIndexRef.current]?.order;
-      if (topicOrder !== undefined) {
-        saveProgressBeacon(topicOrder);
-      }
-    };
-  }, [topics, reviseMode, saveProgressBeacon]);
+    // Save to DB via fetch (for cross-device persistence, fire-and-forget)
+    fetch("/api/chapters/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
+      keepalive: true,
+    }).catch(() => {});
+  }, [currentIndex, chapterId, topics, reviseMode]);
 
   const currentTopic = topics[currentIndex];
   const totalTopics = topics.length;
