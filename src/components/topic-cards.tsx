@@ -73,36 +73,50 @@ export function TopicCards({
   const isVerticalScroll = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
   const swipeAreaRef = useRef<HTMLDivElement>(null);
-  const progressTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedOrderRef = useRef<number>(-1);
 
-  // Silently save reading progress (debounced — waits 1s after last swipe)
+  // Save reading progress immediately when user navigates to a new card
   useEffect(() => {
-    if (reviseMode) return; // Don't track progress in revise mode
+    if (reviseMode) return;
 
     const topicOrder = topics[currentIndex]?.order;
     if (topicOrder === undefined) return;
 
-    // Clear previous timer
-    if (progressTimerRef.current) {
-      clearTimeout(progressTimerRef.current);
-    }
+    // Skip if we already saved this or an earlier position
+    if (topicOrder <= lastSavedOrderRef.current) return;
 
-    // Debounce: save after 500ms of staying on a card
-    progressTimerRef.current = setTimeout(() => {
-      fetch("/api/chapters/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
-      }).catch(() => {
-        // Silently fail — non-critical
-      });
-    }, 500);
+    lastSavedOrderRef.current = topicOrder;
 
-    return () => {
-      if (progressTimerRef.current) {
-        clearTimeout(progressTimerRef.current);
-      }
+    // Fire immediately — API deduplicates (only saves if further)
+    fetch("/api/chapters/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
+    }).catch(() => {
+      // Silently fail — non-critical
+    });
+  }, [currentIndex, chapterId, topics, reviseMode]);
+
+  // Safety net: save on page unload (back button, tab close, etc.)
+  useEffect(() => {
+    if (reviseMode) return;
+
+    const handleBeforeUnload = () => {
+      const topicOrder = topics[currentIndex]?.order;
+      if (topicOrder === undefined) return;
+
+      // sendBeacon survives page navigation — guaranteed delivery
+      navigator.sendBeacon(
+        "/api/chapters/progress",
+        new Blob(
+          [JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder })],
+          { type: "application/json" }
+        )
+      );
     };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [currentIndex, chapterId, topics, reviseMode]);
 
   const currentTopic = topics[currentIndex];
