@@ -9,13 +9,14 @@ datasource db {
 }
 
 model User {
-  id            String         @id // Clerk user ID
-  email         String         @unique
-  selectedClass Int?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  quizAttempts  QuizAttempt[]
-  topicStatuses TopicStatus[]
+  id               String            @id // Clerk user ID
+  email            String            @unique
+  selectedClass    Int?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  quizAttempts     QuizAttempt[]
+  topicStatuses    TopicStatus[]
+  chapterProgress  ChapterProgress[]
 }
 
 model Subject {
@@ -30,14 +31,15 @@ model Subject {
 }
 
 model Chapter {
-  id           String        @id @default(cuid())
-  subjectId    String
-  subject      Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  title        String
-  order        Int           @default(0)
-  topics       Topic[]
-  mcqs         MCQ[]
-  quizAttempts QuizAttempt[]
+  id              String            @id @default(cuid())
+  subjectId       String
+  subject         Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title           String
+  order           Int               @default(0)
+  topics          Topic[]
+  mcqs            MCQ[]
+  quizAttempts    QuizAttempt[]
+  chapterProgress ChapterProgress[]
 
   @@index([subjectId])
 }
@@ -94,6 +96,20 @@ model QuizAttempt {
   total     Int
   createdAt DateTime @default(now())
 
+  @@index([userId])
+  @@index([chapterId])
+}
+
+model ChapterProgress {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId             String
+  chapter               Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  lastViewedTopicOrder  Int      @default(0)
+  updatedAt             DateTime @updatedAt
+
+  @@unique([userId, chapterId])
   @@index([userId])
   @@index([chapterId])
 }

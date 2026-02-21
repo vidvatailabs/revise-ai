@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -33,6 +33,7 @@ interface TopicCardsProps {
   hasQuiz: boolean;
   mcqCount: number;
   reviseMode?: boolean;
+  resumeIndex?: number;
 }
 
 type SwipeDirection = "left" | "right" | null;
@@ -44,8 +45,9 @@ export function TopicCards({
   hasQuiz,
   mcqCount,
   reviseMode = false,
+  resumeIndex = 0,
 }: TopicCardsProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(resumeIndex);
   const [statuses, setStatuses] = useState<Record<string, string | null>>(
     () => {
       const initial: Record<string, string | null> = {};
@@ -71,6 +73,37 @@ export function TopicCards({
   const isVerticalScroll = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
   const swipeAreaRef = useRef<HTMLDivElement>(null);
+  const progressTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Silently save reading progress (debounced — waits 1s after last swipe)
+  useEffect(() => {
+    if (reviseMode) return; // Don't track progress in revise mode
+
+    const topicOrder = topics[currentIndex]?.order;
+    if (topicOrder === undefined) return;
+
+    // Clear previous timer
+    if (progressTimerRef.current) {
+      clearTimeout(progressTimerRef.current);
+    }
+
+    // Debounce: save after 1 second of staying on a card
+    progressTimerRef.current = setTimeout(() => {
+      fetch("/api/chapters/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
+      }).catch(() => {
+        // Silently fail — non-critical
+      });
+    }, 1000);
+
+    return () => {
+      if (progressTimerRef.current) {
+        clearTimeout(progressTimerRef.current);
+      }
+    };
+  }, [currentIndex, chapterId, topics, reviseMode]);
 
   const currentTopic = topics[currentIndex];
   const totalTopics = topics.length;
@@ -562,10 +595,15 @@ export function TopicCards({
         </Button>
       </div>
 
-      {/* Swipe hint - only show on first card */}
-      {currentIndex === 0 && (
+      {/* Swipe hint - only show on first card, or resume hint */}
+      {currentIndex === 0 && resumeIndex === 0 && (
         <p className="text-center text-xs text-muted-foreground/60">
           Swipe left or right to navigate cards
+        </p>
+      )}
+      {currentIndex === resumeIndex && resumeIndex > 0 && !reviseMode && (
+        <p className="text-center text-xs text-indigo-400/70">
+          ▶ Resumed from where you left off
         </p>
       )}
     </div>

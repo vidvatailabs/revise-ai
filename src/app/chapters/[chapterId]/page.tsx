@@ -45,6 +45,11 @@ export default async function ChapterPage({
 
   const hasQuiz = chapter._count.mcqs > 0;
 
+  // Fetch user's reading progress for this chapter
+  const chapterProgress = await prisma.chapterProgress.findUnique({
+    where: { userId_chapterId: { userId, chapterId: params.chapterId } },
+  });
+
   // Prepare topics with their status for the client component
   const allTopics = chapter.topics.map((topic) => ({
     id: topic.id,
@@ -62,6 +67,18 @@ export default async function ChapterPage({
   // If revise mode but no topics to revise, redirect to full chapter
   if (isReviseMode && topicsToShow.length === 0) {
     redirect(`/chapters/${params.chapterId}`);
+  }
+
+  // Calculate resume index — find the topic to resume from
+  let resumeIndex = 0;
+  if (!isReviseMode && chapterProgress) {
+    const savedOrder = chapterProgress.lastViewedTopicOrder;
+    // Find the index of the topic with the saved order
+    const savedIndex = topicsToShow.findIndex((t) => t.order === savedOrder);
+    if (savedIndex !== -1) {
+      // If user already viewed all topics, start from beginning (re-review)
+      resumeIndex = savedIndex < topicsToShow.length - 1 ? savedIndex + 1 : 0;
+    }
   }
 
   const backHref = isReviseMode ? "/revise-later" : `/subjects/${chapter.subjectId}`;
@@ -117,6 +134,7 @@ export default async function ChapterPage({
               hasQuiz={!isReviseMode && hasQuiz}
               mcqCount={chapter._count.mcqs}
               reviseMode={isReviseMode}
+              resumeIndex={resumeIndex}
             />
           </div>
         )}
