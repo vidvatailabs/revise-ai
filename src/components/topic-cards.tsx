@@ -73,39 +73,16 @@ export function TopicCards({
   const isVerticalScroll = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
   const swipeAreaRef = useRef<HTMLDivElement>(null);
-  const lastSavedOrderRef = useRef<number>(-1);
+  const currentIndexRef = useRef(resumeIndex);
 
-  // Save reading progress immediately when user navigates to a new card
+  // Keep ref in sync so unmount/unload can read latest value
   useEffect(() => {
-    if (reviseMode) return;
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
 
-    const topicOrder = topics[currentIndex]?.order;
-    if (topicOrder === undefined) return;
-
-    // Skip if we already saved this exact position
-    if (topicOrder === lastSavedOrderRef.current) return;
-
-    lastSavedOrderRef.current = topicOrder;
-
-    // Fire immediately — API deduplicates (only saves if further)
-    fetch("/api/chapters/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
-    }).catch(() => {
-      // Silently fail — non-critical
-    });
-  }, [currentIndex, chapterId, topics, reviseMode]);
-
-  // Safety net: save on page unload (back button, tab close, etc.)
-  useEffect(() => {
-    if (reviseMode) return;
-
-    const handleBeforeUnload = () => {
-      const topicOrder = topics[currentIndex]?.order;
-      if (topicOrder === undefined) return;
-
-      // sendBeacon survives page navigation — guaranteed delivery
+  // Helper: save progress via sendBeacon (survives page navigation)
+  const saveProgressBeacon = useCallback(
+    (topicOrder: number) => {
       navigator.sendBeacon(
         "/api/chapters/progress",
         new Blob(
@@ -113,11 +90,44 @@ export function TopicCards({
           { type: "application/json" }
         )
       );
+    },
+    [chapterId]
+  );
+
+  // Save progress on every card change (instant, fire-and-forget)
+  useEffect(() => {
+    if (reviseMode) return;
+
+    const topicOrder = topics[currentIndex]?.order;
+    if (topicOrder === undefined) return;
+
+    // Use sendBeacon — lightweight, non-blocking, survives navigation
+    saveProgressBeacon(topicOrder);
+  }, [currentIndex, topics, reviseMode, saveProgressBeacon]);
+
+  // Safety net: save on component unmount (client-side navigation)
+  // and on tab close / hard refresh (beforeunload)
+  useEffect(() => {
+    if (reviseMode) return;
+
+    const handleBeforeUnload = () => {
+      const topicOrder = topics[currentIndexRef.current]?.order;
+      if (topicOrder !== undefined) {
+        saveProgressBeacon(topicOrder);
+      }
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [currentIndex, chapterId, topics, reviseMode]);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // On unmount (Next.js client navigation) — save current position
+      const topicOrder = topics[currentIndexRef.current]?.order;
+      if (topicOrder !== undefined) {
+        saveProgressBeacon(topicOrder);
+      }
+    };
+  }, [topics, reviseMode, saveProgressBeacon]);
 
   const currentTopic = topics[currentIndex];
   const totalTopics = topics.length;
