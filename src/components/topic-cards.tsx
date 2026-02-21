@@ -87,7 +87,7 @@ export function TopicCards({
       clearTimeout(progressTimerRef.current);
     }
 
-    // Debounce: save after 1 second of staying on a card
+    // Debounce: save after 500ms of staying on a card
     progressTimerRef.current = setTimeout(() => {
       fetch("/api/chapters/progress", {
         method: "POST",
@@ -96,7 +96,7 @@ export function TopicCards({
       }).catch(() => {
         // Silently fail — non-critical
       });
-    }, 1000);
+    }, 500);
 
     return () => {
       if (progressTimerRef.current) {
