@@ -34,6 +34,7 @@ interface TopicCardsProps {
   mcqCount: number;
   reviseMode?: boolean;
   resumeIndex?: number;
+  userId?: string;
 }
 
 type SwipeDirection = "left" | "right" | null;
@@ -46,6 +47,7 @@ export function TopicCards({
   mcqCount,
   reviseMode = false,
   resumeIndex = 0,
+  userId = "",
 }: TopicCardsProps) {
   const [statuses, setStatuses] = useState<Record<string, string | null>>(
     () => {
@@ -72,13 +74,22 @@ export function TopicCards({
   const isVerticalScroll = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
   const swipeAreaRef = useRef<HTMLDivElement>(null);
+  const storageKey = userId ? `chapter-progress-${userId}-${chapterId}` : "";
   const currentIndexRef = useRef(resumeIndex);
 
-  // On mount: check localStorage for a more recent position than server's resumeIndex
+  // Determine initial index:
+  // - Server resumeIndex (from DB) is the source of truth
+  // - localStorage is only used if server has no data (resumeIndex === 0)
+  //   to handle quick back-and-forth navigation within the same session
   const [initialIndex] = useState(() => {
-    if (reviseMode) return resumeIndex;
+    if (reviseMode || !storageKey) return resumeIndex;
+
+    // If server already has a saved position, use it (cross-device accurate)
+    if (resumeIndex > 0) return resumeIndex;
+
+    // Otherwise, check localStorage (same-session quick resume)
     try {
-      const saved = localStorage.getItem(`chapter-progress-${chapterId}`);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         const savedIndex = parseInt(saved, 10);
         if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < topics.length) {
@@ -89,7 +100,6 @@ export function TopicCards({
     return resumeIndex;
   });
 
-  // Override currentIndex with localStorage value on first render
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
   // Keep ref in sync so unmount/unload can read latest value
@@ -104,10 +114,12 @@ export function TopicCards({
     const topicOrder = topics[currentIndex]?.order;
     if (topicOrder === undefined) return;
 
-    // Save to localStorage instantly (for same-device resume, no network needed)
-    try {
-      localStorage.setItem(`chapter-progress-${chapterId}`, String(currentIndex));
-    } catch {}
+    // Save to localStorage instantly (for same-session quick resume)
+    if (storageKey) {
+      try {
+        localStorage.setItem(storageKey, String(currentIndex));
+      } catch {}
+    }
 
     // Save to DB via fetch (for cross-device persistence, fire-and-forget)
     fetch("/api/chapters/progress", {

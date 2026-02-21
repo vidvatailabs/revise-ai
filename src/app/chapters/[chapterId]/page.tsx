@@ -134,6 +134,7 @@ export default async function ChapterPage({
               mcqCount={chapter._count.mcqs}
               reviseMode={isReviseMode}
               resumeIndex={resumeIndex}
+              userId={userId}
             />
           </div>
         )}
