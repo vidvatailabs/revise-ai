@@ -534,7 +534,7 @@ export function TopicCards({
 
             {/* PYQ Section - inline expand/collapse */}
             {currentTopic.pyqs && currentTopic.pyqs.length > 0 && (
-              <div ref={pyqRef} className="mt-4" onTouchStart={(e) => e.stopPropagation()} onTouchMove={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
+              <div ref={pyqRef} className="mt-4">
                 <button
                   onClick={() => {
                     const willExpand = !pyqExpanded;
