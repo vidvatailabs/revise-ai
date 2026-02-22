@@ -12,6 +12,7 @@ model User {
   id               String            @id // Clerk user ID
   email            String            @unique
   selectedClass    Int?
+  theme            String            @default("dark")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   quizAttempts     QuizAttempt[]

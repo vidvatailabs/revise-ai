@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { BookOpen, GraduationCap, Sun, Moon, Crown } from "lucide-react";
@@ -14,8 +14,32 @@ export function AppHeader() {
   const [mounted, setMounted] = useState(false);
   const [proModalOpen, setProModalOpen] = useState(false);
 
-  // Avoid hydration mismatch — only render theme button after mount
-  useEffect(() => setMounted(true), []);
+  // On mount: mark mounted + sync theme from DB (runs once)
+  useEffect(() => {
+    setMounted(true);
+    // Fetch user's saved theme from DB and apply if different
+    fetch("/api/user/theme")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.theme && data.theme !== theme) {
+          setTheme(data.theme);
+        }
+      })
+      .catch(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Toggle theme and persist to DB
+  const handleThemeToggle = useCallback(() => {
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    // Save to DB in the background (fire-and-forget)
+    fetch("/api/user/theme", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme: newTheme }),
+      keepalive: true,
+    }).catch(() => {});
+  }, [resolvedTheme, setTheme]);
 
   const isDark = resolvedTheme === "dark";
 
@@ -48,7 +72,7 @@ export function AppHeader() {
             {/* Theme toggle button */}
             {mounted && (
               <button
-                onClick={() => setTheme(isDark ? "light" : "dark")}
+                onClick={handleThemeToggle}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card hover:bg-secondary transition-colors"
                 title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
               >
