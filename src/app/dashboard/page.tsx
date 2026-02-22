@@ -181,7 +181,7 @@ export default async function DashboardPage() {
               </p>
             </div>
             <div className="flex-shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-white group-hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/25">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-white group-hover:bg-indigo-600 transition-colors">
                 <PlayCircle className="h-5 w-5" />
               </div>
             </div>
