@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,7 @@ import {
   Loader2,
   RotateCcw,
   Home,
+  ChevronsDown,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -76,7 +77,22 @@ export function QuizClient({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const answeredCount = Object.keys(answers).length;
   const allAnswered = mcqs.every((mcq) => answers[mcq.id]);
+  const unansweredCount = mcqs.length - answeredCount;
+
+  const scrollToFirstUnanswered = useCallback(() => {
+    const firstUnanswered = mcqs.find((mcq) => !answers[mcq.id]);
+    if (firstUnanswered) {
+      const el = document.getElementById(`quiz-q-${firstUnanswered.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Brief highlight pulse
+        el.classList.add("ring-2", "ring-indigo-500/50");
+        setTimeout(() => el.classList.remove("ring-2", "ring-indigo-500/50"), 1500);
+      }
+    }
+  }, [mcqs, answers]);
 
   const handleSubmit = async () => {
     if (!allAnswered) return;
@@ -285,20 +301,32 @@ export function QuizClient({
   return (
     <div className="space-y-6">
       {/* Progress Indicator */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <p className="text-sm text-muted-foreground">
-          {Object.keys(answers).length} of {mcqs.length} answered
+          {answeredCount} of {mcqs.length} answered
         </p>
-        <Badge variant="outline">
-          {Object.keys(answers).length}/{mcqs.length}
-        </Badge>
+        <div className="flex items-center gap-2">
+          {answeredCount > 0 && !allAnswered && (
+            <button
+              onClick={scrollToFirstUnanswered}
+              className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 text-xs font-medium text-indigo-400 hover:bg-indigo-500/20 transition-colors"
+            >
+              <ChevronsDown className="h-3.5 w-3.5" />
+              {unansweredCount} unanswered
+            </button>
+          )}
+          <Badge variant="outline">
+            {answeredCount}/{mcqs.length}
+          </Badge>
+        </div>
       </div>
 
       {/* Questions */}
       {mcqs.map((mcq, index) => (
         <div
           key={mcq.id}
-          className={`rounded-xl border p-5 transition-colors ${
+          id={`quiz-q-${mcq.id}`}
+          className={`rounded-xl border p-5 transition-all ${
             answers[mcq.id]
               ? "border-indigo-500/20 bg-indigo-500/5"
               : "border-border bg-card"
