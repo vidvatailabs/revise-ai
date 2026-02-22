@@ -552,7 +552,7 @@ export function TopicCards({
                             behavior: "smooth",
                           });
                         }
-                      }, 320);
+                      }, 120);
                     }
                   }}
                   className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg bg-violet-500/8 border border-violet-500/15 hover:bg-violet-500/12 transition-colors group"
@@ -570,7 +570,7 @@ export function TopicCards({
 
                 {/* Expanded PYQ details */}
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  className={`overflow-hidden transition-all duration-100 ease-in-out ${
                     pyqExpanded ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
                   }`}
                 >
