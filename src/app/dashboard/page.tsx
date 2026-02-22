@@ -122,8 +122,10 @@ export default async function DashboardPage() {
     greeting = "Good morning!";
   } else if (hour >= 12 && hour < 17) {
     greeting = "Good afternoon!";
-  } else {
+  } else if (hour >= 17 && hour < 21) {
     greeting = "Good evening!";
+  } else {
+    greeting = "Midnight hustle!";
   }
 
   // Continue Reading data
@@ -148,7 +150,7 @@ export default async function DashboardPage() {
         <div className="flex items-start justify-between mb-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              {greeting} 👋
+              {greeting} {greeting === "Midnight hustle!" ? "🌙" : "👋"}
             </h1>
             <div className="flex items-center gap-2 text-muted-foreground">
               <GraduationCap className="h-4 w-4" />
