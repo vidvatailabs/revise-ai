@@ -61,6 +61,7 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
   const isVerticalScroll = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
   const swipeAreaRef = useRef<HTMLDivElement>(null);
+  const summaryTouchStart = useRef({ x: 0, y: 0 });
 
   const currentTopic = topics[currentIndex];
   const totalTopics = topics.length;
@@ -111,6 +112,18 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
     if (animating || currentIndex === 0) return;
     animateTransition("right", currentIndex - 1);
   }, [currentIndex, animating, animateTransition]);
+
+  const goBackFromSummary = useCallback(() => {
+    if (animating) return;
+    setAnimating(true);
+    setShowSummary(false);
+    setCurrentIndex(totalTopics - 1);
+    setEnterDirection("left");
+    setTimeout(() => {
+      setEnterDirection(null);
+      setAnimating(false);
+    }, 300);
+  }, [animating, totalTopics]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (animating) return;
@@ -281,6 +294,16 @@ export function ReviseAllCards({ topics }: ReviseAllCardsProps) {
           className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 sm:p-8 text-center"
           style={{
             animation: "summaryPop 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+          onTouchStart={(e) => {
+            summaryTouchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+          }}
+          onTouchEnd={(e) => {
+            const diffX = summaryTouchStart.current.x - e.changedTouches[0].clientX;
+            const diffY = Math.abs(summaryTouchStart.current.y - e.changedTouches[0].clientY);
+            if (Math.abs(diffX) > 60 && Math.abs(diffX) > diffY) {
+              goBackFromSummary();
+            }
           }}
         >
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 mb-4">

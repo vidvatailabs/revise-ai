@@ -87,6 +87,7 @@ export function TopicCards({
   const isVerticalScroll = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
   const swipeAreaRef = useRef<HTMLDivElement>(null);
+  const summaryTouchStart = useRef({ x: 0, y: 0 });
   const storageKey = userId ? `chapter-progress-${userId}-${chapterId}` : "";
   const currentIndexRef = useRef(resumeIndex);
 
@@ -285,6 +286,18 @@ export function TopicCards({
     animateTransition("right", currentIndex - 1);
   }, [currentIndex, animating, animateTransition]);
 
+  const goBackFromSummary = useCallback(() => {
+    if (animating) return;
+    setAnimating(true);
+    setShowSummary(false);
+    setCurrentIndex(totalTopics - 1);
+    setEnterDirection("left");
+    setTimeout(() => {
+      setEnterDirection(null);
+      setAnimating(false);
+    }, 300);
+  }, [animating, totalTopics]);
+
   // Keyboard navigation (arrow keys) for desktop
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -480,6 +493,16 @@ export function TopicCards({
               : "border-indigo-500/20 bg-indigo-500/5"
           }`}
           style={{ animation: "summaryPop 0.4s cubic-bezier(0.22, 1, 0.36, 1)" }}
+          onTouchStart={(e) => {
+            summaryTouchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+          }}
+          onTouchEnd={(e) => {
+            const diffX = summaryTouchStart.current.x - e.changedTouches[0].clientX;
+            const diffY = Math.abs(summaryTouchStart.current.y - e.changedTouches[0].clientY);
+            if (Math.abs(diffX) > 60 && Math.abs(diffX) > diffY) {
+              goBackFromSummary();
+            }
+          }}
         >
           <div className={`inline-flex h-14 w-14 items-center justify-center rounded-full mb-4 ${
             reviseMode ? "bg-amber-500/10" : "bg-indigo-500/10"
