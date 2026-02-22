@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   ChevronRight,
   CheckCircle2,
+  PlayCircle,
 } from "lucide-react";
 
 export default async function SubjectPage({
@@ -37,6 +38,16 @@ export default async function SubjectPage({
   });
 
   if (!subject) notFound();
+
+  // Find the most recently read chapter in this subject
+  const lastProgress = await prisma.chapterProgress.findFirst({
+    where: {
+      userId,
+      chapter: { subjectId: params.subjectId },
+    },
+    orderBy: { updatedAt: "desc" },
+    select: { chapterId: true },
+  });
 
   const completedChapters = subject.chapters.filter(
     (c) => c.quizAttempts.length > 0
@@ -76,23 +87,32 @@ export default async function SubjectPage({
             const lastAttempt = chapter.quizAttempts[0];
             const hasQuiz = chapter._count.mcqs > 0;
             const isCompleted = !!lastAttempt;
+            const isLastRead = lastProgress?.chapterId === chapter.id;
 
             return (
               <Link
                 key={chapter.id}
                 href={`/chapters/${chapter.id}`}
-                className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 sm:p-5 transition-all hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5"
+                className={`group flex items-center gap-3 rounded-xl border bg-card p-4 sm:p-5 transition-all hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5 ${
+                  isLastRead
+                    ? "border-indigo-500/30 bg-indigo-500/[0.03]"
+                    : "border-border"
+                }`}
               >
                 {/* Chapter Number */}
                 <div
                   className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold ${
                     isCompleted
                       ? "bg-green-500/10 text-green-400"
+                      : isLastRead
+                      ? "bg-indigo-500/10 text-indigo-400"
                       : "bg-secondary text-muted-foreground"
                   }`}
                 >
                   {isCompleted ? (
                     <CheckCircle2 className="h-5 w-5" />
+                  ) : isLastRead ? (
+                    <PlayCircle className="h-5 w-5" />
                   ) : (
                     index + 1
                   )}
@@ -101,9 +121,16 @@ export default async function SubjectPage({
                 {/* Chapter Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold text-foreground group-hover:text-indigo-300 transition-colors truncate">
-                      {chapter.title}
-                    </h3>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <h3 className="font-semibold text-foreground group-hover:text-indigo-300 transition-colors truncate">
+                        {chapter.title}
+                      </h3>
+                      {isLastRead && (
+                        <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 text-[10px] px-1.5 py-0 flex-shrink-0">
+                          Resume
+                        </Badge>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       {lastAttempt && (
                         <Badge

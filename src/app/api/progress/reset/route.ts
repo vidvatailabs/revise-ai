@@ -19,10 +19,16 @@ export async function DELETE() {
       where: { userId },
     });
 
+    // Also delete all chapter progress (resume positions)
+    const deletedProgress = await prisma.chapterProgress.deleteMany({
+      where: { userId },
+    });
+
     return NextResponse.json({
       success: true,
       deletedAttempts: deletedAttempts.count,
       deletedStatuses: deletedStatuses.count,
+      deletedProgress: deletedProgress.count,
     });
   } catch (error) {
     console.error("Reset progress error:", error);
