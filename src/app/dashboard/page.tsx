@@ -103,7 +103,9 @@ export default async function DashboardPage() {
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              Welcome back! 👋
+              {totalQuizzesTaken > 0 || completedChapters > 0
+                ? "Welcome back! 👋"
+                : "Welcome! 👋"}
             </h1>
             <div className="flex items-center gap-2 text-muted-foreground">
               <GraduationCap className="h-4 w-4" />
