@@ -143,7 +143,7 @@ export function ProModal({ open, onOpenChange }: ProModalProps) {
               <div className="text-center mb-4">
                 <div className="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full mb-2">
                   <Sparkles className="h-3 w-3" />
-                  {PRO_DISCOUNT}% OFF — LIMITED TIME
+                  {PRO_DISCOUNT}% OFF - LIMITED TIME
                 </div>
                 <div className="flex items-baseline justify-center gap-2">
                   <span className="text-sm sm:text-base text-muted-foreground line-through">
@@ -177,7 +177,7 @@ export function ProModal({ open, onOpenChange }: ProModalProps) {
                 onClick={handleUpgrade}
                 className="w-full mt-4 sm:mt-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 hover:from-amber-600 hover:via-orange-600 hover:to-pink-600 text-white font-semibold text-sm sm:text-base transition-all shadow-lg shadow-orange-500/20 hover:shadow-orange-500/35 active:scale-[0.98]"
               >
-                🚀 Upgrade to Pro — ₹{PRO_PRICE}/yr
+                🚀 Upgrade to Pro - ₹{PRO_PRICE}/yr
               </button>
             </div>
           )}
@@ -189,7 +189,7 @@ export function ProModal({ open, onOpenChange }: ProModalProps) {
               <div className="text-center mb-4">
                 <div className="inline-flex items-center gap-1.5 bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-400 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full mb-2">
                   <Sparkles className="h-3 w-3" />
-                  {MAX_DISCOUNT}% OFF — LIMITED TIME
+                  {MAX_DISCOUNT}% OFF - LIMITED TIME
                 </div>
                 <div className="flex items-baseline justify-center gap-2">
                   <span className="text-sm sm:text-base text-muted-foreground line-through">
@@ -229,7 +229,7 @@ export function ProModal({ open, onOpenChange }: ProModalProps) {
                 onClick={handleUpgrade}
                 className="w-full mt-4 sm:mt-5 py-3 rounded-xl bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 hover:from-violet-600 hover:via-fuchsia-600 hover:to-pink-600 text-white font-semibold text-sm sm:text-base transition-all shadow-lg shadow-violet-500/20 hover:shadow-violet-500/35 active:scale-[0.98]"
               >
-                ⚡ Upgrade to Pro Max — ₹{MAX_PRICE.toLocaleString("en-IN")}/yr
+                ⚡ Upgrade to Pro Max - ₹{MAX_PRICE.toLocaleString("en-IN")}/yr
               </button>
             </div>
           )}

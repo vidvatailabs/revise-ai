@@ -78,7 +78,7 @@
   }
 }
 
-/* Custom scrollbar — adapts to theme */
+/* Custom scrollbar - adapts to theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -98,7 +98,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Theme transition — smooth color change */
+/* Theme transition - smooth color change */
 html.transitioning,
 html.transitioning *,
 html.transitioning *::before,
@@ -114,7 +114,7 @@ html.transitioning *::after {
   background-clip: text;
 }
 
-/* Ambient glow effects — dark mode only */
+/* Ambient glow effects - dark mode only */
 .dark .bg-glow {
   position: fixed;
   inset: 0;
@@ -136,7 +136,7 @@ html.transitioning *::after {
     radial-gradient(ellipse 50% 40% at 80% 80%, rgba(168, 85, 247, 0.04) 0%, transparent 70%);
 }
 
-/* Landing page — always dark */
+/* Landing page - always dark */
 .landing-dark {
   --background: 222 47% 5%;
   --foreground: 214 32% 91%;

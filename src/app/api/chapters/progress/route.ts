@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Always save the current position — user may go forward or backward
+    // Always save the current position - user may go forward or backward
     const progress = await prisma.chapterProgress.upsert({
       where: { userId_chapterId: { userId, chapterId } },
       update: { lastViewedTopicOrder },

@@ -69,7 +69,7 @@ export default async function ChapterPage({
     redirect(`/chapters/${params.chapterId}`);
   }
 
-  // Calculate resume index — find the topic to resume from
+  // Calculate resume index - find the topic to resume from
   let resumeIndex = 0;
   if (!isReviseMode && chapterProgress) {
     const savedOrder = chapterProgress.lastViewedTopicOrder;
