@@ -70,6 +70,7 @@ export function TopicCards({
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
   const [pyqExpanded, setPyqExpanded] = useState(false);
+  const pyqRef = useRef<HTMLDivElement>(null);
 
   // Animation state
   const [animating, setAnimating] = useState(false);
@@ -533,9 +534,18 @@ export function TopicCards({
 
             {/* PYQ Section - inline expand/collapse */}
             {currentTopic.pyqs && currentTopic.pyqs.length > 0 && (
-              <div className="mt-4" onTouchStart={(e) => e.stopPropagation()} onTouchMove={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
+              <div ref={pyqRef} className="mt-4" onTouchStart={(e) => e.stopPropagation()} onTouchMove={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
                 <button
-                  onClick={() => setPyqExpanded(!pyqExpanded)}
+                  onClick={() => {
+                    const willExpand = !pyqExpanded;
+                    setPyqExpanded(willExpand);
+                    if (willExpand) {
+                      // Wait for expand animation, then scroll PYQ section into view
+                      setTimeout(() => {
+                        pyqRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }, 100);
+                    }
+                  }}
                   className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg bg-violet-500/8 border border-violet-500/15 hover:bg-violet-500/12 transition-colors group"
                 >
                   <FileText className="h-3.5 w-3.5 text-violet-500 shrink-0" />
