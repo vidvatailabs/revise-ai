@@ -147,12 +147,20 @@ export function TopicCards({
   });
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [showResumeToast, setShowResumeToast] = useState(initialIndex > 0);
 
   // Keep ref in sync + reset PYQ expanded state on card change
   useEffect(() => {
     currentIndexRef.current = currentIndex;
     setPyqExpanded(false);
   }, [currentIndex]);
+
+  // Auto-hide resume toast after 3 seconds
+  useEffect(() => {
+    if (!showResumeToast) return;
+    const timer = setTimeout(() => setShowResumeToast(false), 3000);
+    return () => clearTimeout(timer);
+  }, [showResumeToast]);
 
   // Helper: save progress to DB
   const saveProgressToDB = useCallback(
@@ -276,6 +284,23 @@ export function TopicCards({
     if (animating || currentIndex === 0) return;
     animateTransition("right", currentIndex - 1);
   }, [currentIndex, animating, animateTransition]);
+
+  // Keyboard navigation (arrow keys) for desktop
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't capture if user is typing in an input/textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        goPrev();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [goNext, goPrev]);
 
   // Touch/swipe handlers - only on the swipe area, not buttons
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -549,6 +574,14 @@ export function TopicCards({
           }
         }
       `}</style>
+
+      {/* Resume toast */}
+      {showResumeToast && (
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs sm:text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300">
+          <PlayCircle className="h-3.5 w-3.5 flex-shrink-0" />
+          Resumed from card {initialIndex + 1}
+        </div>
+      )}
 
       {/* Progress bar */}
       <div className="flex items-center gap-3">
