@@ -4,6 +4,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
 import { PWARegister } from "@/components/pwa-register";
+import { PageTransition } from "@/components/page-transition";
+import { BackToTop } from "@/components/back-to-top";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -72,7 +74,8 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            {children}
+            <PageTransition>{children}</PageTransition>
+            <BackToTop />
           </ThemeProvider>
           <PWARegister />
         </body>
