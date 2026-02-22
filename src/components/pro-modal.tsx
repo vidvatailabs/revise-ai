@@ -25,14 +25,14 @@ interface ProModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-/* ── Pricing ── */
+/* -- Pricing (hardcoded for precise display) -- */
 const PRO_ORIGINAL = 2999;
-const PRO_DISCOUNT = 70;
-const PRO_PRICE = Math.round(PRO_ORIGINAL * (1 - PRO_DISCOUNT / 100));
+const PRO_PRICE = 899;
+const PRO_DISCOUNT = Math.round(((PRO_ORIGINAL - PRO_PRICE) / PRO_ORIGINAL) * 100);
 
 const MAX_ORIGINAL = 4999;
-const MAX_DISCOUNT = 60;
-const MAX_PRICE = Math.round(MAX_ORIGINAL * (1 - MAX_DISCOUNT / 100));
+const MAX_PRICE = 1999;
+const MAX_DISCOUNT = Math.round(((MAX_ORIGINAL - MAX_PRICE) / MAX_ORIGINAL) * 100);
 
 /* ── Features per plan ── */
 const FREE_FEATURES = [
