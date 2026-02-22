@@ -58,14 +58,14 @@ export function AppHeader() {
           </Link>
 
           <div className="flex items-center gap-2">
-            {/* Pro upgrade button */}
+            {/* Upgrade button */}
             <button
               onClick={() => setProModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 hover:from-amber-500/20 hover:to-orange-500/20 hover:border-amber-500/30 transition-all group"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 hover:from-indigo-500/20 hover:to-purple-500/20 hover:border-indigo-500/30 transition-all group"
             >
-              <Crown className="h-3.5 w-3.5 text-amber-500" />
-              <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 group-hover:text-amber-700 dark:group-hover:text-amber-300">
-                Pro
+              <Crown className="h-3.5 w-3.5 text-indigo-500" />
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300">
+                Upgrade
               </span>
             </button>
 
