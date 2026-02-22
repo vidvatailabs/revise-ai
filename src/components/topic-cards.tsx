@@ -576,8 +576,14 @@ export function TopicCards({
       `}</style>
 
       {/* Resume toast */}
-      {showResumeToast && (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs sm:text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300">
+      {initialIndex > 0 && (
+        <div
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs sm:text-sm font-medium transition-all duration-500 ${
+            showResumeToast
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-2 pointer-events-none h-0 py-0 mb-0 overflow-hidden"
+          }`}
+        >
           <PlayCircle className="h-3.5 w-3.5 flex-shrink-0" />
           Resumed from card {initialIndex + 1}
         </div>
@@ -817,11 +823,6 @@ export function TopicCards({
       {currentIndex === 0 && resumeIndex === 0 && (
         <p className="text-center text-xs text-muted-foreground/60">
           Swipe left or right to navigate cards
-        </p>
-      )}
-      {currentIndex === resumeIndex && resumeIndex > 0 && !reviseMode && (
-        <p className="text-center text-xs text-indigo-400/70">
-          ▶ Resumed from where you left off
         </p>
       )}
     </div>
