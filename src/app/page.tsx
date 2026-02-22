@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ForceDarkTheme } from "@/components/force-dark-theme";
 
 const features = [
   {
@@ -59,6 +60,7 @@ export default async function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background landing-dark">
+      <ForceDarkTheme />
       {/* Ambient glow */}
       <div className="bg-glow" />
 

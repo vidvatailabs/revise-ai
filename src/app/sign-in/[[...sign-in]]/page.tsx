@@ -1,8 +1,10 @@
 import { SignIn } from "@clerk/nextjs";
+import { ForceDarkTheme } from "@/components/force-dark-theme";
 
 export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
+      <ForceDarkTheme />
       <div className="bg-glow" />
       <SignIn
         appearance={{
