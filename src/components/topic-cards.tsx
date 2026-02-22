@@ -88,14 +88,14 @@ export function TopicCards({
   const storageKey = userId ? `chapter-progress-${userId}-${chapterId}` : "";
   const currentIndexRef = useRef(resumeIndex);
 
-  // Determine initial index:
-  // - Use the HIGHER of localStorage (same-device, instant) and DB (cross-device)
-  // - Quick same-device nav: localStorage wins (DB save may still be in-flight)
-  // - Cross-device: DB wins (localStorage on this device is stale)
+  // Local-first resume:
+  // 1. On mount: sync DB -> localStorage (if DB is ahead, e.g. another device updated)
+  // 2. Always read from localStorage (instant, single source of truth)
+  // 3. DB is updated async in the background for cross-device persistence
   const [initialIndex] = useState(() => {
     if (reviseMode || !storageKey) return resumeIndex;
 
-    let localIndex = -1;
+    let localIndex = 0;
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
@@ -106,8 +106,16 @@ export function TopicCards({
       }
     } catch {}
 
-    // Use whichever is further ahead
-    return Math.max(localIndex, resumeIndex);
+    // If DB has a more recent position (from another device), update localStorage
+    if (resumeIndex > localIndex) {
+      try {
+        localStorage.setItem(storageKey, String(resumeIndex));
+      } catch {}
+      return resumeIndex;
+    }
+
+    // Otherwise, localStorage is the truth (same device, always fresh)
+    return localIndex;
   });
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
