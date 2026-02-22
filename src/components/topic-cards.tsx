@@ -89,16 +89,13 @@ export function TopicCards({
   const currentIndexRef = useRef(resumeIndex);
 
   // Determine initial index:
-  // - Server resumeIndex (from DB) is the source of truth
-  // - localStorage is only used if server has no data (resumeIndex === 0)
-  //   to handle quick back-and-forth navigation within the same session
+  // - localStorage is checked FIRST (sync write, always freshest on same device)
+  // - Server resumeIndex (from DB) is fallback (for cross-device / new browser)
   const [initialIndex] = useState(() => {
     if (reviseMode || !storageKey) return resumeIndex;
 
-    // If server already has a saved position, use it (cross-device accurate)
-    if (resumeIndex > 0) return resumeIndex;
-
-    // Otherwise, check localStorage (same-session quick resume)
+    // Check localStorage first - it's always the most recent on this device
+    // (written synchronously, unlike DB which is async and may lag)
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
@@ -108,6 +105,8 @@ export function TopicCards({
         }
       }
     } catch {}
+
+    // Fallback to server resumeIndex (cross-device / first visit on this browser)
     return resumeIndex;
   });
 
