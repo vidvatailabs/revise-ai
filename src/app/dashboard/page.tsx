@@ -5,6 +5,7 @@ import { getOrCreateUser } from "@/lib/user";
 import { prisma } from "@/lib/prisma";
 import { AppHeader } from "@/components/app-header";
 import { ResetProgress } from "@/components/reset-progress";
+import { DashboardGreeting } from "@/components/dashboard-greeting";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -116,21 +117,8 @@ export default async function DashboardPage() {
     0
   );
 
-  // Time-based greeting
-  const hour = new Date().getHours();
+  // Determine if user is returning (for greeting)
   const isReturningUser = totalQuizzesTaken > 0 || completedChapters > 0 || !!lastProgress;
-  let greeting: string;
-  if (!isReturningUser) {
-    greeting = "Welcome!";
-  } else if (hour >= 5 && hour < 12) {
-    greeting = "Good morning!";
-  } else if (hour >= 12 && hour < 17) {
-    greeting = "Good afternoon!";
-  } else if (hour >= 17 && hour < 21) {
-    greeting = "Good evening!";
-  } else {
-    greeting = "Midnight hustle!";
-  }
 
   // Continue Reading data - only show if user hasn't finished all topics
   const lastTopicOrder = lastProgress?.chapter.topics[0]?.order ?? 0;
@@ -158,9 +146,7 @@ export default async function DashboardPage() {
         {/* Welcome Section */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              {greeting} {greeting === "Midnight hustle!" ? "🌙" : "👋"}
-            </h1>
+            <DashboardGreeting isReturningUser={isReturningUser} />
             <div className="flex items-center gap-2 text-muted-foreground">
               <GraduationCap className="h-4 w-4" />
               <span>Class {user.selectedClass} | CBSE</span>
