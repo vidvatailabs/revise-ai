@@ -16,6 +16,7 @@ import {
   GraduationCap,
   Clock,
   Rocket,
+  PlayCircle,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -83,6 +84,23 @@ export default async function DashboardPage() {
     },
   });
 
+  // Fetch the most recently read chapter (for "Continue Reading")
+  const lastProgress = await prisma.chapterProgress.findFirst({
+    where: {
+      userId,
+      chapter: { subjectId: { in: subjectIds } },
+    },
+    orderBy: { updatedAt: "desc" },
+    include: {
+      chapter: {
+        include: {
+          subject: { select: { title: true, icon: true } },
+          _count: { select: { topics: true } },
+        },
+      },
+    },
+  });
+
   // Calculate stats
   const totalChapters = subjects.reduce(
     (sum, s) => sum + s.chapters.length,
@@ -94,18 +112,43 @@ export default async function DashboardPage() {
     0
   );
 
+  // Time-based greeting
+  const hour = new Date().getHours();
+  const isReturningUser = totalQuizzesTaken > 0 || completedChapters > 0 || !!lastProgress;
+  let greeting: string;
+  if (!isReturningUser) {
+    greeting = "Welcome!";
+  } else if (hour >= 5 && hour < 12) {
+    greeting = "Good morning!";
+  } else if (hour >= 12 && hour < 17) {
+    greeting = "Good afternoon!";
+  } else {
+    greeting = "Good evening!";
+  }
+
+  // Continue Reading data
+  const continueReading = lastProgress
+    ? {
+        chapterId: lastProgress.chapterId,
+        chapterTitle: lastProgress.chapter.title,
+        subjectTitle: lastProgress.chapter.subject.title,
+        subjectIcon: lastProgress.chapter.subject.icon,
+        topicsCurrent: lastProgress.lastViewedTopicOrder,
+        topicsTotal: lastProgress.chapter._count.topics,
+        updatedAt: lastProgress.updatedAt,
+      }
+    : null;
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         {/* Welcome Section */}
-        <div className="flex items-start justify-between mb-8">
+        <div className="flex items-start justify-between mb-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              {totalQuizzesTaken > 0 || completedChapters > 0
-                ? "Welcome back! 👋"
-                : "Welcome! 👋"}
+              {greeting} 👋
             </h1>
             <div className="flex items-center gap-2 text-muted-foreground">
               <GraduationCap className="h-4 w-4" />
@@ -114,6 +157,34 @@ export default async function DashboardPage() {
           </div>
           {completedChapters > 0 && <ResetProgress />}
         </div>
+
+        {/* Continue Reading - only for users who have browsed chapters */}
+        {continueReading && (
+          <Link
+            href={`/chapters/${continueReading.chapterId}`}
+            className="group flex items-center gap-4 rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 p-4 sm:p-5 mb-8 transition-all hover:border-indigo-500/40 hover:shadow-lg hover:shadow-indigo-500/5"
+          >
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-2xl">
+              {continueReading.subjectIcon || "📖"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-wide mb-0.5">
+                Continue Reading
+              </p>
+              <h3 className="font-semibold text-foreground truncate group-hover:text-indigo-300 transition-colors">
+                {continueReading.chapterTitle}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {continueReading.subjectTitle} - Topic {continueReading.topicsCurrent} of {continueReading.topicsTotal}
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-white group-hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/25">
+                <PlayCircle className="h-5 w-5" />
+              </div>
+            </div>
+          </Link>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
