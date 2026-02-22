@@ -89,25 +89,25 @@ export function TopicCards({
   const currentIndexRef = useRef(resumeIndex);
 
   // Determine initial index:
-  // - localStorage is checked FIRST (sync write, always freshest on same device)
-  // - Server resumeIndex (from DB) is fallback (for cross-device / new browser)
+  // - Use the HIGHER of localStorage (same-device, instant) and DB (cross-device)
+  // - Quick same-device nav: localStorage wins (DB save may still be in-flight)
+  // - Cross-device: DB wins (localStorage on this device is stale)
   const [initialIndex] = useState(() => {
     if (reviseMode || !storageKey) return resumeIndex;
 
-    // Check localStorage first - it's always the most recent on this device
-    // (written synchronously, unlike DB which is async and may lag)
+    let localIndex = -1;
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
-        const savedIndex = parseInt(saved, 10);
-        if (!isNaN(savedIndex) && savedIndex >= 0 && savedIndex < topics.length) {
-          return savedIndex;
+        const parsed = parseInt(saved, 10);
+        if (!isNaN(parsed) && parsed >= 0 && parsed < topics.length) {
+          localIndex = parsed;
         }
       }
     } catch {}
 
-    // Fallback to server resumeIndex (cross-device / first visit on this browser)
-    return resumeIndex;
+    // Use whichever is further ahead
+    return Math.max(localIndex, resumeIndex);
   });
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
