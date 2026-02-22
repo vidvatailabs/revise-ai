@@ -17,6 +17,7 @@ import {
   PlayCircle,
   RotateCcw,
   FileText,
+  SearchCheck,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -548,6 +549,23 @@ export function TopicCards({
           </div>
 
           <div className="flex flex-wrap gap-3 justify-center">
+            {unmarkedCount > 0 && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const firstUnmarked = topics.findIndex(
+                    (t) => !statuses[t.id]
+                  );
+                  if (firstUnmarked !== -1) {
+                    setCurrentIndex(firstUnmarked);
+                    setShowSummary(false);
+                  }
+                }}
+                className="gap-2 border-slate-500/30 text-slate-300 hover:text-foreground"
+              >
+                <SearchCheck className="h-4 w-4" /> Go to Unmarked ({unmarkedCount})
+              </Button>
+            )}
             <Button
               variant="outline"
               onClick={() => {
