@@ -30,6 +30,10 @@ export default async function ChapterPage({
             where: { userId },
             select: { status: true },
           },
+          pyqs: {
+            orderBy: { year: "desc" },
+            select: { year: true, marks: true, question: true },
+          },
         },
       },
       _count: { select: { mcqs: true } },
@@ -50,13 +54,18 @@ export default async function ChapterPage({
     where: { userId_chapterId: { userId, chapterId: params.chapterId } },
   });
 
-  // Prepare topics with their status for the client component
+  // Prepare topics with their status and PYQ data for the client component
   const allTopics = chapter.topics.map((topic) => ({
     id: topic.id,
     title: topic.title,
     summary: topic.summary,
     order: topic.order,
     status: topic.statuses[0]?.status ?? null,
+    pyqs: topic.pyqs.map((p) => ({
+      year: p.year,
+      marks: p.marks,
+      question: p.question,
+    })),
   }));
 
   // In revise mode, only show topics marked as "revise_later"

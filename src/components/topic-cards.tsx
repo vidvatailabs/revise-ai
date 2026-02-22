@@ -10,13 +10,21 @@ import {
   BookmarkCheck,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Share2,
   Loader2,
   Sparkles,
   PlayCircle,
   RotateCcw,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
+
+type TopicPYQ = {
+  year: number;
+  marks: number | null;
+  question: string | null;
+};
 
 type TopicWithStatus = {
   id: string;
@@ -24,6 +32,7 @@ type TopicWithStatus = {
   summary: string;
   order: number;
   status?: string | null; // "got_it" | "revise_later" | null
+  pyqs?: TopicPYQ[];
 };
 
 interface TopicCardsProps {
@@ -60,6 +69,7 @@ export function TopicCards({
   );
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [pyqExpanded, setPyqExpanded] = useState(false);
 
   // Animation state
   const [animating, setAnimating] = useState(false);
@@ -102,9 +112,10 @@ export function TopicCards({
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-  // Keep ref in sync so unmount/unload can read latest value
+  // Keep ref in sync + reset PYQ expanded state on card change
   useEffect(() => {
     currentIndexRef.current = currentIndex;
+    setPyqExpanded(false);
   }, [currentIndex]);
 
   // Save progress on every card change
@@ -515,10 +526,59 @@ export function TopicCards({
           )}
 
           {/* Card content - scrollable */}
-          <div className="px-5 pb-5 max-h-[50vh] overflow-y-auto">
+          <div className="px-5 pb-4 max-h-[50vh] overflow-y-auto">
             <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
               {currentTopic.summary}
             </div>
+
+            {/* PYQ Section - inline expand/collapse */}
+            {currentTopic.pyqs && currentTopic.pyqs.length > 0 && (
+              <div className="mt-4" onTouchStart={(e) => e.stopPropagation()} onTouchMove={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => setPyqExpanded(!pyqExpanded)}
+                  className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg bg-violet-500/8 border border-violet-500/15 hover:bg-violet-500/12 transition-colors group"
+                >
+                  <FileText className="h-3.5 w-3.5 text-violet-500 shrink-0" />
+                  <span className="text-xs sm:text-sm font-medium text-violet-600 dark:text-violet-400 flex-1">
+                    Asked in {currentTopic.pyqs.length} {currentTopic.pyqs.length === 1 ? "paper" : "papers"}
+                  </span>
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 text-violet-400 transition-transform duration-200 ${
+                      pyqExpanded ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Expanded PYQ details */}
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    pyqExpanded ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="rounded-lg border border-border bg-secondary/40 divide-y divide-border">
+                    {currentTopic.pyqs.map((pyq, idx) => (
+                      <div key={idx} className="px-3 py-2.5 sm:px-4 sm:py-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md bg-violet-500/10 text-violet-600 dark:text-violet-400 text-xs font-bold">
+                            {pyq.year}
+                          </span>
+                          {pyq.marks && (
+                            <span className="text-[11px] sm:text-xs text-muted-foreground">
+                              {pyq.marks} {pyq.marks === 1 ? "mark" : "marks"}
+                            </span>
+                          )}
+                        </div>
+                        {pyq.question && (
+                          <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed mt-1">
+                            {pyq.question}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Action buttons - stop propagation to prevent swipe interference */}

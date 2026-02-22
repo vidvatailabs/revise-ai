@@ -53,8 +53,20 @@ model Topic {
   summary   String        @db.Text
   order     Int           @default(0)
   statuses  TopicStatus[]
+  pyqs      TopicPYQ[]
 
   @@index([chapterId])
+}
+
+model TopicPYQ {
+  id        String  @id @default(cuid())
+  topicId   String
+  topic     Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  year      Int     // e.g. 2025, 2024, 2023
+  marks     Int?    // marks allotted (optional)
+  question  String? @db.Text // actual question asked (optional)
+
+  @@index([topicId])
 }
 
 model MCQ {
