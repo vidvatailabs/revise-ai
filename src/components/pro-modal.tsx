@@ -39,7 +39,7 @@ const FREE_FEATURES = [
   { icon: BookOpen, text: "Limited chapters per subject" },
   { icon: Share2, text: "Share to unlock more chapters" },
   { icon: Palette, text: "Dark & Light themes" },
-  { icon: Zap, text: "Basic quiz attempts" },
+  { icon: Zap, text: "3 quiz attempts per chapter" },
 ];
 
 const PRO_FEATURES = [
