@@ -540,13 +540,15 @@ export function TopicCards({
                     const willExpand = !pyqExpanded;
                     setPyqExpanded(willExpand);
                     if (willExpand) {
-                      // Scroll PYQ to top within the card's scrollable container (not the page)
+                      // Scroll PYQ button to the top of the card's scrollable area
                       setTimeout(() => {
                         const el = pyqRef.current;
-                        const scrollParent = el?.closest(".overflow-y-auto");
+                        const scrollParent = el?.closest(".overflow-y-auto") as HTMLElement | null;
                         if (el && scrollParent) {
-                          scrollParent.scrollTo({
-                            top: el.offsetTop - scrollParent.getBoundingClientRect().top,
+                          const elTop = el.getBoundingClientRect().top;
+                          const parentTop = scrollParent.getBoundingClientRect().top;
+                          scrollParent.scrollBy({
+                            top: elTop - parentTop,
                             behavior: "smooth",
                           });
                         }
