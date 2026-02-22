@@ -11,6 +11,9 @@ import {
   PlayCircle,
 } from "lucide-react";
 
+// Always fetch fresh data - resume badge depends on latest progress
+export const dynamic = "force-dynamic";
+
 export default async function SubjectPage({
   params,
 }: {

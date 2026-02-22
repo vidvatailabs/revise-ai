@@ -19,6 +19,9 @@ import {
   PlayCircle,
 } from "lucide-react";
 
+// Always fetch fresh data - stats, continue reading, etc.
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
