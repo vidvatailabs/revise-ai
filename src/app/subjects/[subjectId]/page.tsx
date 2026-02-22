@@ -46,8 +46,22 @@ export default async function SubjectPage({
       chapter: { subjectId: params.subjectId },
     },
     orderBy: { updatedAt: "desc" },
-    select: { chapterId: true },
+    select: {
+      chapterId: true,
+      lastViewedTopicOrder: true,
+      chapter: {
+        select: {
+          topics: { orderBy: { order: "desc" }, take: 1, select: { order: true } },
+        },
+      },
+    },
   });
+
+  // Only show Resume if user hasn't finished all topics in that chapter
+  const lastTopicOrder = lastProgress?.chapter.topics[0]?.order ?? 0;
+  const resumeChapterId = lastProgress && lastProgress.lastViewedTopicOrder < lastTopicOrder
+    ? lastProgress.chapterId
+    : null;
 
   const completedChapters = subject.chapters.filter(
     (c) => c.quizAttempts.length > 0
@@ -87,7 +101,7 @@ export default async function SubjectPage({
             const lastAttempt = chapter.quizAttempts[0];
             const hasQuiz = chapter._count.mcqs > 0;
             const isCompleted = !!lastAttempt;
-            const isLastRead = lastProgress?.chapterId === chapter.id;
+            const isLastRead = resumeChapterId === chapter.id;
 
             return (
               <Link

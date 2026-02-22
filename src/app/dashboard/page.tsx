@@ -96,6 +96,7 @@ export default async function DashboardPage() {
         include: {
           subject: { select: { title: true, icon: true } },
           _count: { select: { topics: true } },
+          topics: { orderBy: { order: "desc" }, take: 1, select: { order: true } },
         },
       },
     },
@@ -128,8 +129,13 @@ export default async function DashboardPage() {
     greeting = "Midnight hustle!";
   }
 
-  // Continue Reading data
-  const continueReading = lastProgress
+  // Continue Reading data - only show if user hasn't finished all topics
+  const lastTopicOrder = lastProgress?.chapter.topics[0]?.order ?? 0;
+  const hasFinishedChapter = lastProgress
+    ? lastProgress.lastViewedTopicOrder >= lastTopicOrder
+    : false;
+
+  const continueReading = lastProgress && !hasFinishedChapter
     ? {
         chapterId: lastProgress.chapterId,
         chapterTitle: lastProgress.chapter.title,
