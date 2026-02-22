@@ -43,6 +43,7 @@ interface TopicCardsProps {
   mcqCount: number;
   reviseMode?: boolean;
   resumeIndex?: number;
+  resumeTimestamp?: number; // unix ms - when DB progress was last updated
   userId?: string;
 }
 
@@ -56,6 +57,7 @@ export function TopicCards({
   mcqCount,
   reviseMode = false,
   resumeIndex = 0,
+  resumeTimestamp = 0,
   userId = "",
 }: TopicCardsProps) {
   const [statuses, setStatuses] = useState<Record<string, string | null>>(
@@ -88,34 +90,60 @@ export function TopicCards({
   const storageKey = userId ? `chapter-progress-${userId}-${chapterId}` : "";
   const currentIndexRef = useRef(resumeIndex);
 
-  // Local-first resume:
-  // 1. On mount: sync DB -> localStorage (if DB is ahead, e.g. another device updated)
-  // 2. Always read from localStorage (instant, single source of truth)
-  // 3. DB is updated async in the background for cross-device persistence
+  // Local-first resume with timestamp comparison:
+  // - localStorage stores { index, timestamp } (written sync on every card change)
+  // - DB stores { lastViewedTopicOrder, updatedAt } (written async for cross-device)
+  // - On mount: compare timestamps - the NEWER one wins
+  //   - Same device quick nav: localStorage is newer (DB save may lag)
+  //   - Cross device: DB is newer (updated from other device)
   const [initialIndex] = useState(() => {
     if (reviseMode || !storageKey) return resumeIndex;
 
+    // Read localStorage data (index + timestamp)
     let localIndex = 0;
+    let localTimestamp = 0;
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
-        const parsed = parseInt(saved, 10);
-        if (!isNaN(parsed) && parsed >= 0 && parsed < topics.length) {
-          localIndex = parsed;
+        const data = JSON.parse(saved);
+        if (data && typeof data.index === "number" && typeof data.timestamp === "number") {
+          if (data.index >= 0 && data.index < topics.length) {
+            localIndex = data.index;
+            localTimestamp = data.timestamp;
+          }
+        } else if (typeof data === "number") {
+          // Backward compat: old format stored just the index number
+          if (data >= 0 && data < topics.length) {
+            localIndex = data;
+            localTimestamp = 0; // unknown time, DB takes priority
+          }
         }
       }
-    } catch {}
-
-    // If DB has a more recent position (from another device), update localStorage
-    if (resumeIndex > localIndex) {
+    } catch {
+      // Could be old string format "3" - try parsing as plain number
       try {
-        localStorage.setItem(storageKey, String(resumeIndex));
+        const raw = localStorage.getItem(storageKey);
+        if (raw) {
+          const parsed = parseInt(raw, 10);
+          if (!isNaN(parsed) && parsed >= 0 && parsed < topics.length) {
+            localIndex = parsed;
+            localTimestamp = 0;
+          }
+        }
+      } catch {}
+    }
+
+    // Compare timestamps - newer wins
+    if (localTimestamp >= resumeTimestamp) {
+      // localStorage is same or newer - use it (same-device, always fresh)
+      return localIndex;
+    } else {
+      // DB is newer - another device updated, sync to localStorage
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ index: resumeIndex, timestamp: resumeTimestamp }));
       } catch {}
       return resumeIndex;
     }
-
-    // Otherwise, localStorage is the truth (same device, always fresh)
-    return localIndex;
   });
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -149,14 +177,14 @@ export function TopicCards({
     const topicOrder = topics[currentIndex]?.order;
     if (topicOrder === undefined) return;
 
-    // Save to localStorage instantly (for same-session quick resume)
+    // Save to localStorage instantly with timestamp (sync, always fresh)
     if (storageKey) {
       try {
-        localStorage.setItem(storageKey, String(currentIndex));
+        localStorage.setItem(storageKey, JSON.stringify({ index: currentIndex, timestamp: Date.now() }));
       } catch {}
     }
 
-    // Save to DB
+    // Save to DB (async, for cross-device persistence)
     saveProgressToDB(currentIndex);
   }, [currentIndex, chapterId, topics, reviseMode, storageKey, saveProgressToDB]);
 

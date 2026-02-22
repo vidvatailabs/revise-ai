@@ -81,14 +81,15 @@ export default async function ChapterPage({
     redirect(`/chapters/${params.chapterId}`);
   }
 
-  // Calculate resume index - find the topic to resume from
+  // Calculate resume index and timestamp from DB
   let resumeIndex = 0;
+  let resumeTimestamp = 0; // unix ms - when the DB progress was last updated
   if (!isReviseMode && chapterProgress) {
     const savedOrder = chapterProgress.lastViewedTopicOrder;
-    // Find the index of the topic with the saved order
     const savedIndex = topicsToShow.findIndex((t) => t.order === savedOrder);
     if (savedIndex !== -1) {
       resumeIndex = savedIndex;
+      resumeTimestamp = chapterProgress.updatedAt.getTime();
     }
   }
 
@@ -146,6 +147,7 @@ export default async function ChapterPage({
               mcqCount={chapter._count.mcqs}
               reviseMode={isReviseMode}
               resumeIndex={resumeIndex}
+              resumeTimestamp={resumeTimestamp}
               userId={userId}
             />
           </div>
