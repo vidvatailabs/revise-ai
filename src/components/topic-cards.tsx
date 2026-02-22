@@ -540,7 +540,7 @@ export function TopicCards({
                     const willExpand = !pyqExpanded;
                     setPyqExpanded(willExpand);
                     if (willExpand) {
-                      // Scroll PYQ button to the top of the card's scrollable area
+                      // Wait for expand animation (300ms) to finish, then scroll
                       setTimeout(() => {
                         const el = pyqRef.current;
                         const scrollParent = el?.closest(".overflow-y-auto") as HTMLElement | null;
@@ -552,7 +552,7 @@ export function TopicCards({
                             behavior: "smooth",
                           });
                         }
-                      }, 100);
+                      }, 320);
                     }
                   }}
                   className="flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg bg-violet-500/8 border border-violet-500/15 hover:bg-violet-500/12 transition-colors group"
