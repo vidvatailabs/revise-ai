@@ -7,6 +7,9 @@ import { TopicCards } from "@/components/topic-cards";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Trophy, BookmarkPlus } from "lucide-react";
 
+// Always fetch fresh data - progress changes on every visit
+export const dynamic = "force-dynamic";
+
 export default async function ChapterPage({
   params,
   searchParams,

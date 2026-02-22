@@ -119,6 +119,22 @@ export function TopicCards({
     setPyqExpanded(false);
   }, [currentIndex]);
 
+  // Helper: save progress to DB
+  const saveProgressToDB = useCallback(
+    (index: number) => {
+      const topicOrder = topics[index]?.order;
+      if (topicOrder === undefined || reviseMode) return;
+
+      fetch("/api/chapters/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
+        keepalive: true,
+      }).catch((err) => console.error("Progress save failed:", err));
+    },
+    [chapterId, topics, reviseMode]
+  );
+
   // Save progress on every card change
   useEffect(() => {
     if (reviseMode) return;
@@ -133,14 +149,44 @@ export function TopicCards({
       } catch {}
     }
 
-    // Save to DB via fetch (for cross-device persistence, fire-and-forget)
-    fetch("/api/chapters/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder }),
-      keepalive: true,
-    }).catch(() => {});
-  }, [currentIndex, chapterId, topics, reviseMode]);
+    // Save to DB
+    saveProgressToDB(currentIndex);
+  }, [currentIndex, chapterId, topics, reviseMode, storageKey, saveProgressToDB]);
+
+  // Backup: save on page hide (tab switch, app background) and before unload
+  useEffect(() => {
+    if (reviseMode) return;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        saveProgressToDB(currentIndexRef.current);
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      // Use sendBeacon as last resort for full page unloads
+      const topicOrder = topics[currentIndexRef.current]?.order;
+      if (topicOrder !== undefined) {
+        navigator.sendBeacon(
+          "/api/chapters/progress",
+          new Blob(
+            [JSON.stringify({ chapterId, lastViewedTopicOrder: topicOrder })],
+            { type: "application/json" }
+          )
+        );
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      // On unmount (client-side navigation), fire one final save
+      saveProgressToDB(currentIndexRef.current);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [chapterId, topics, reviseMode, saveProgressToDB]);
 
   const currentTopic = topics[currentIndex];
   const totalTopics = topics.length;
