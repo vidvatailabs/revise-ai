@@ -303,6 +303,14 @@ export function TopicCards({
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't capture if user is typing in an input/textarea
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (showSummary) {
+        // On summary screen, "back" arrows go to last card
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          e.preventDefault();
+          goBackFromSummary();
+        }
+        return;
+      }
       if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         e.preventDefault();
         goNext();
@@ -313,7 +321,7 @@ export function TopicCards({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goNext, goPrev]);
+  }, [goNext, goPrev, showSummary, goBackFromSummary]);
 
   // Touch/swipe handlers - only on the swipe area, not buttons
   const handleTouchStart = (e: React.TouchEvent) => {
